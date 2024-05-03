@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   // Define list of food items directly in the HomePage class
 
   final _pages = [
-    main_page_widgets(),
+    MainPageWidgets(),
     ProfilePage(),
   ];
 
