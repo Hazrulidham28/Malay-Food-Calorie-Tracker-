@@ -212,61 +212,72 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                   context: context,
                   builder: (BuildContext context) {
                     String label = tflite.predLabel ?? "Label not found";
+                    double confidences = tflite.confidence as double;
+                    String formattedConfidence = confidences.toStringAsFixed(2);
                     return AlertDialog(
-                      title: Text("Captured Image"),
+                      title: Center(child: Text("Captured Image")),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 200,
-                            height: 200,
-                            child: Image.file(tflite.img!),
-                          ),
-                          SizedBox(height: 20),
-                          Text("Label: $label"),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Column(
                             children: [
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    if (_quantity > 1) {
-                                      _quantity--;
-                                      _quantityController.text =
-                                          _quantity.toString();
-                                    }
-                                  });
-                                },
-                                icon: Icon(Iconsax.minus),
+                              Container(
+                                width: 200,
+                                height: 200,
+                                child: Image.file(tflite.img!),
                               ),
-                              SizedBox(width: 10),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _quantity++;
-                                    _quantityController.text =
-                                        _quantity.toString();
-                                  });
-                                },
-                                icon: Icon(Iconsax.add),
-                              ),
-                              SizedBox(width: 10),
-                              SizedBox(
-                                width: 50,
-                                child: TextField(
-                                  controller: _quantityController,
-                                  keyboardType: TextInputType.number,
-                                  textAlign: TextAlign.center,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
+                              SizedBox(height: 20),
+                              Text("Label: $label"),
+                              SizedBox(height: 20),
+                              Text("Confidence: $formattedConfidence"),
+                              SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        if (_quantity > 1) {
+                                          _quantity--;
+                                          _quantityController.text =
+                                              _quantity.toString();
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(Iconsax.minus),
                                   ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _quantity = int.tryParse(value) ?? 1;
-                                    });
-                                  },
-                                ),
+                                  SizedBox(width: 5),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _quantity++;
+                                        _quantityController.text =
+                                            _quantity.toString();
+                                      });
+                                    },
+                                    icon: Icon(Iconsax.add),
+                                  ),
+                                  SizedBox(width: 10),
+                                  SizedBox(
+                                    width: 40,
+                                    height: 50,
+                                    child: TextField(
+                                      controller: _quantityController,
+                                      keyboardType: TextInputType.number,
+                                      textAlign: TextAlign.center,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _quantity = int.tryParse(value) ?? 1;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -278,6 +289,12 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                             Navigator.of(context).pop();
                           },
                           child: Text("Close"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Save"),
                         ),
                       ],
                     );
