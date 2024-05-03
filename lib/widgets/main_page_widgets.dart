@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:malay_food_cal_tracker/providers/tflite.dart';
+import 'package:provider/provider.dart';
 import '../models/food.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:iconsax/iconsax.dart';
@@ -176,9 +179,11 @@ class main_page_widgets extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Iconsax.camera),
+      floatingActionButton: Consumer<Tflite>(
+        builder: (context, tflite, child) => FloatingActionButton(
+          onPressed: () => tflite.btnAction(ImageSource.camera),
+          child: Icon(Iconsax.camera),
+        ),
       ),
     );
   }

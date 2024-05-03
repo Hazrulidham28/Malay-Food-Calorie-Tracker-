@@ -37,6 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   percent_indicator: ^4.2.3
   iconsax: ^0.0.8
+  image_picker: ^1.0.7
+  tflite_flutter: ^0.10.4
+  image: ^4.1.7
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:

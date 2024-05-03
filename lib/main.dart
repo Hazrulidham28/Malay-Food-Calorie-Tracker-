@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:malay_food_cal_tracker/providers/tflite.dart';
+import 'package:provider/provider.dart';
 import './screens/home_page.dart';
 import './screens/landing_page.dart';
 import './screens/registeration_page.dart';
@@ -12,13 +14,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Landing Page',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Tflite(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Landing Page',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: LandingPage(),
+        debugShowCheckedModeBanner: false, // Remove debug label
       ),
-      home: LandingPage(),
-      debugShowCheckedModeBanner: false, // Remove debug label
     );
   }
 }
