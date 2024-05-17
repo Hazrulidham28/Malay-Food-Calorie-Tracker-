@@ -31,7 +31,7 @@ class Tflite extends ChangeNotifier {
   Future<Interpreter> get _interpreter async {
     if (interpreterInstance == null) {
       interpreterInstance = await Interpreter.fromAsset(
-        'assets/3classmodel_testing.tflite',
+        'assets/3classmodel_Trained1.tflite',
       );
       notifyListeners();
     }

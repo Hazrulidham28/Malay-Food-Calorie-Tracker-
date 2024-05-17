@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:malay_food_cal_tracker/screens/login_page.dart';
+import 'package:malay_food_cal_tracker/providers/userProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:malay_food_cal_tracker/models/user.dart';
+import '../providers/userProvider.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -17,7 +20,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String _selectedGender = 'Male';
   String _selectedActivityLevel = 'Sedentary';
 
-  List<String> _activityLevels = [
+  final List<String> _activityLevels = [
     'Sedentary',
     'Lightly active',
     'Moderately active',
@@ -25,17 +28,45 @@ class _RegistrationPageState extends State<RegistrationPage> {
     'Extra active'
   ];
 
-  void _register() {
+  void _register() async {
     if (_formKey.currentState!.validate()) {
-      // Process registration data here
-      // You can navigate to the next screen or perform calculations
-      // based on the collected data
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Under development !!!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      try {
+        //use standart provider ways
+        final userProvider userProviders =
+            Provider.of<userProvider>(context, listen: false);
+        String username1 = _usernameController.text;
+        String email1 = _emailController.text;
+        String password1 = _passwordController.text;
+        double weight1 = double.parse(_weightController.text);
+        double height1 = double.parse(_heightController.text);
+        int age1 = int.parse(_ageController.text);
+        String activityLevel1 = _selectedActivityLevel;
+        String userProfile1 = '';
+
+        User regUser = User(
+          userId: '',
+          username: username1,
+          email: email1,
+          password: password1,
+          weight: weight1,
+          height: height1,
+          age: age1,
+          activityLevel: activityLevel1,
+          userProfile: userProfile1,
+        );
+
+        userProviders.setUser(regUser);
+        await userProviders.registerUser();
+        Navigator.pushReplacementNamed(context, '/home');
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Registration failed: $e'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        print(e);
+      }
     }
   }
 
@@ -163,7 +194,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your weight';
                         }
-                        // You can add more weight validation logic here
+                        if (double.tryParse(value) == null) {
+                          return 'Please enter a valid number';
+                        }
                         return null;
                       },
                     ),
@@ -182,7 +215,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your height';
                         }
-                        // You can add more height validation logic here
+                        if (double.tryParse(value) == null) {
+                          return 'Please enter a valid number';
+                        }
                         return null;
                       },
                     ),
@@ -205,7 +240,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your age';
                         }
-                        // You can add more age validation logic here
+                        if (int.tryParse(value) == null) {
+                          return 'Please enter a valid number';
+                        }
                         return null;
                       },
                     ),
@@ -213,7 +250,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   SizedBox(width: 16.0),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      isExpanded: true,
                       value: _selectedActivityLevel,
                       onChanged: (String? newValue) {
                         setState(() {
@@ -229,41 +265,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       decoration: InputDecoration(
                         labelText: 'Activity Level',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                            borderRadius: BorderRadius.circular(20)),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20.0),
-              SizedBox(
-                width: 250,
-                child: ElevatedButton(
-                  onPressed: _register,
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                  ),
-                  child: Text(
-                    'Register',
-                    style: TextStyle(fontSize: 15),
+              SizedBox(height: 40.0),
+              ElevatedButton(
+                onPressed: _register,
+                child: Text('Register'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 50.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
               ),
-              SizedBox(height: 10.0), // Add space below the register button
+              SizedBox(height: 20.0),
               TextButton(
                 onPressed: () {
-                  // Navigate to login page or perform any other action
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ),
-                  );
+                  Navigator.pushNamed(context, '/login');
                 },
-                child: Text('Already has an account? Login'),
+                child: Text('Has an account? Login'),
               ),
             ],
           ),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "181620501704",
+    "project_id": "malay-food-cal-tracker",
+    "storage_bucket": "malay-food-cal-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181620501704:android:85a9e4918debffeb76c9fd",
+        "android_client_info": {
+          "package_name": "com.example.malay_food_cal_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlnxhqBoH8Nvbx20z8UKZbQOw8R-3mVfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

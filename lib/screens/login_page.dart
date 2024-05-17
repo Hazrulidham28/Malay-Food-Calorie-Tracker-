@@ -47,7 +47,7 @@ class LoginPage extends StatelessWidget {
                           border: InputBorder.none, // Hide default border
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 16.0),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.email,
                             color: Colors.grey,
                           ),
@@ -80,7 +80,7 @@ class LoginPage extends StatelessWidget {
                             border: InputBorder.none, // Hide default border
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 16.0),
-                            prefixIcon: Icon(Icons.key)),
+                            prefixIcon: const Icon(Icons.key)),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
