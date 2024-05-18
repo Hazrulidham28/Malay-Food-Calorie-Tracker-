@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
+import '../providers/userProvider.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _login(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        final userProviders = Provider.of<userProvider>(context, listen: false);
+        await userProviders.loginUser(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login failed: $e'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +45,7 @@ class LoginPage extends StatelessWidget {
                     'MalayFood',
                     style: TextStyle(fontSize: 32.0, color: Colors.black),
                   ),
-                  SizedBox(height: 5.0), // Add margin between widgets
+                  SizedBox(height: 5.0),
                   Text(
                     'CalorieTracker',
                     style: TextStyle(fontSize: 32.0, color: Colors.green),
@@ -32,10 +53,8 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 100.0),
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(20.0), // Set border radius here
-                      border: Border.all(
-                          color: Colors.grey), // Optional: Add border color
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(color: Colors.grey),
                     ),
                     child: SizedBox(
                       width: 350,
@@ -44,7 +63,7 @@ class LoginPage extends StatelessWidget {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          border: InputBorder.none, // Hide default border
+                          border: InputBorder.none,
                           contentPadding:
                               EdgeInsets.symmetric(horizontal: 16.0),
                           prefixIcon: const Icon(
@@ -56,7 +75,6 @@ class LoginPage extends StatelessWidget {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
-                          // You can add more email validation logic here
                           return null;
                         },
                       ),
@@ -65,10 +83,8 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 16.0),
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(20.0), // Set border radius here
-                      border: Border.all(
-                          color: Colors.grey), // Optional: Add border color
+                      borderRadius: BorderRadius.circular(20.0),
+                      border: Border.all(color: Colors.grey),
                     ),
                     child: SizedBox(
                       width: 350,
@@ -76,16 +92,16 @@ class LoginPage extends StatelessWidget {
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: InputBorder.none, // Hide default border
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 16.0),
-                            prefixIcon: const Icon(Icons.key)),
+                          labelText: 'Password',
+                          border: InputBorder.none,
+                          contentPadding:
+                              EdgeInsets.symmetric(horizontal: 16.0),
+                          prefixIcon: const Icon(Icons.key),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           }
-                          // You can add more password validation logic here
                           return null;
                         },
                       ),
@@ -95,21 +111,10 @@ class LoginPage extends StatelessWidget {
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Add login logic here
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(),
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: () => _login(context),
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              20.0), // Set button border radius here
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                       child: Text('Login'),

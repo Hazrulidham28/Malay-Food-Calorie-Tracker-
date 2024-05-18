@@ -13,16 +13,16 @@ class userProvider extends ChangeNotifier {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // userProvider() {
-  //   _auth.authStateChanges().listen((auth.User? firebaseUser) {
-  //     if (firebaseUser != null) {
-  //       _setLoggedInUser(firebaseUser);
-  //     } else {
-  //       userR = null;
-  //       notifyListeners();
-  //     }
-  //   });
-  // }
+  userProvider() {
+    _auth.authStateChanges().listen((auth.User? firebaseUser) {
+      if (firebaseUser != null) {
+        _setLoggedInUser(firebaseUser);
+      } else {
+        userR = null;
+        notifyListeners();
+      }
+    });
+  }
 
   //set loggedinuser
   void _setLoggedInUser(auth.User? firebaseUser) async {
@@ -38,44 +38,6 @@ class userProvider extends ChangeNotifier {
   void setUser(User thisUser) {
     userR = thisUser;
   }
-
-  //register user
-  // Future<void> registerUser({
-  //   required String username,
-  //   required String email,
-  //   required String password,
-  //   required double weight,
-  //   required double height,
-  //   required int age,
-  //   required String activityLevel,
-  //   required String userProfile,
-  // }) async {
-  //   try {
-  //     auth.UserCredential userCredential =
-  //         await _auth.createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-
-  //     _user = User(
-  //       userId: userCredential.user!.uid,
-  //       username: username,
-  //       email: email,
-  //       weight: weight,
-  //       height: height,
-  //       age: age,
-  //       activityLevel: activityLevel,
-  //       userProfile: userProfile,
-  //     );
-
-  //     await _firestore.collection('users').doc(_user.userId).set(_user.toMap());
-
-  //     notifyListeners();
-  //   } catch (e) {
-  //     print('Error registering user: $e');
-  //     throw e;
-  //   }
-  // }
 
   Future<void> registerUser() async {
     try {
@@ -118,7 +80,14 @@ class userProvider extends ChangeNotifier {
   }
 
   //set logout
-  void logoutUser() {
-    _auth.signOut();
+  Future<void> logoutUser() async {
+    try {
+      _auth.signOut();
+      userR = null;
+      notifyListeners();
+    } catch (e) {
+      print('error logging out:$e');
+      throw e;
+    }
   }
 }
