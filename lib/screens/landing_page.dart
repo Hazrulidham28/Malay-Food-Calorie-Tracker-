@@ -36,7 +36,7 @@ class LandingPage extends StatelessWidget {
                   width: 250, // Set button width to match parent width
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => RegistrationPage()),
@@ -59,7 +59,7 @@ class LandingPage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => LoginPage()),
                     );

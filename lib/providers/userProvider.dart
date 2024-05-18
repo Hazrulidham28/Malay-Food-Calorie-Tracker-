@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
+
+enum AuthStatus { Authenticated, Unauthenticated }
 
 class userProvider extends ChangeNotifier {
   // late User _user;
   // User get user => _user;
   User? userR;
-
   User? get user => userR;
+
+  AuthStatus _status = AuthStatus.Unauthenticated;
+  AuthStatus get status => _status;
 
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -16,12 +21,22 @@ class userProvider extends ChangeNotifier {
   userProvider() {
     _auth.authStateChanges().listen((auth.User? firebaseUser) {
       if (firebaseUser != null) {
+        checkLoginStatus();
         _setLoggedInUser(firebaseUser);
       } else {
         userR = null;
         notifyListeners();
       }
     });
+  }
+
+  //check login status if authenticated or not
+  Future<void> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    _status =
+        isLoggedIn ? AuthStatus.Authenticated : AuthStatus.Unauthenticated;
+    notifyListeners();
   }
 
   //set loggedinuser
@@ -73,6 +88,8 @@ class userProvider extends ChangeNotifier {
         email: email,
         password: password,
       );
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true);
     } catch (e) {
       print('Error logging in: $e');
       throw e;
@@ -84,6 +101,8 @@ class userProvider extends ChangeNotifier {
     try {
       _auth.signOut();
       userR = null;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', false);
       notifyListeners();
     } catch (e) {
       print('error logging out:$e');

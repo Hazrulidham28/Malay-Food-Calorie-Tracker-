@@ -4,11 +4,11 @@ import 'package:malay_food_cal_tracker/providers/tflite.dart';
 import 'package:malay_food_cal_tracker/providers/userProvider.dart';
 import 'package:malay_food_cal_tracker/screens/login_page.dart';
 import 'package:malay_food_cal_tracker/screens/profile_page.dart';
+import 'package:malay_food_cal_tracker/screens/splash_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './screens/home_page.dart';
-import './screens/landing_page.dart';
 import './screens/registeration_page.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -16,6 +16,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await SharedPreferences.getInstance();
   runApp(const MyApp());
 }
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: LandingPage(),
+        home: SplashScreen(),
         debugShowCheckedModeBanner: false, // Remove debug label
         routes: {
           '/login': (context) => LoginPage(),
