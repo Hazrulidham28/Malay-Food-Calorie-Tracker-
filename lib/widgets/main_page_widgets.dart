@@ -342,15 +342,15 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         ),
                         TextButton(
                           onPressed: () {
-                            double totalcal = totalCalories(
-                                tflite.predLabel.toString(), _quantity);
+                            // double totalcal = totalCalories(
+                            //     tflite.predLabel.toString(), _quantity);
                             //pass the food label, and quantity to the save food controller
                             //may need to use await
                             _foodService.saveFoodData(
                                 userProviders.userR!.userId,
                                 label,
                                 _quantity,
-                                totalcal,
+                                tflite.caloriesIndex as int,
                                 tflite.img!);
                             Navigator.of(context).pop();
                           },

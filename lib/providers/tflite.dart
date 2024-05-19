@@ -17,6 +17,7 @@ class Tflite extends ChangeNotifier {
   List<String> allLabel = [];
   Interpreter? interpreterInstance;
   double? confidence;
+  int? caloriesIndex;
 
   Tflite() {
     loadAsset();
@@ -27,6 +28,18 @@ class Tflite extends ChangeNotifier {
     allLabel = loadedString.split('\n');
     notifyListeners();
   }
+
+  // void calculateCalorie() {
+  //   if (predLabel == 'karipap') {
+  //     calories = 130;
+  //   } else if (predLabel == 'roti_canai') {
+  //     calories = 300;
+  //   } else if (predLabel == 'nasi_lemak') {
+  //     calories = 389;
+  //   } else {
+  //     calories = 1; // Default calorie value if label doesn't match
+  //   }
+  // }
 
   Future<Interpreter> get _interpreter async {
     if (interpreterInstance == null) {
@@ -56,10 +69,11 @@ class Tflite extends ChangeNotifier {
     );
 
     result = await _runInference(imageMatrix);
-    predLabel = getLabel(result.cast<num>());
+    predLabel = getLabel(result.cast<num>()).toString();
     confidence = getConfidence(result.cast<num>());
 
     isLoading = false;
+    // calculateCalorie();
     notifyListeners();
   }
 
@@ -102,6 +116,8 @@ class Tflite extends ChangeNotifier {
         bestInd = i;
       }
     });
+
+    caloriesIndex = bestInd;
 
     return maxScore as double;
   }

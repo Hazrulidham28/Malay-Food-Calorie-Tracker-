@@ -8,7 +8,7 @@ class FoodService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<void> saveFoodData(String userID, String foodLabel, int quantity,
-      double totalCal, File foodImage) async {
+      int caloriesIndex, File foodImage) async {
     String foodID = FirebaseFirestore.instance.collection('foods').doc().id;
     try {
       //upload food image to firebase storage
@@ -17,13 +17,15 @@ class FoodService {
       // Get current date
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
+      double totalCalories = getCalories(caloriesIndex, quantity);
+
       // Save food data to Firestore
       await _firestore.collection('food_entries').doc(foodID).set({
         'foodId': foodID,
         'userId': userID,
         'foodLabel': foodLabel,
         'quantity': quantity,
-        'calories': totalCal,
+        'calories': totalCalories,
         'imageUrl': imageURL,
         'date': currentDate,
         'timestamp': FieldValue.serverTimestamp(), // For ordering purposes
@@ -52,6 +54,23 @@ class FoodService {
       print('Error uploading food image:$e');
       throw e;
     }
+  }
+
+  double getCalories(int indexOfcalories, int quantity) {
+    double calorieofFood = 0;
+    double total = 0;
+    if (indexOfcalories == 0) {
+      calorieofFood = 230;
+    } else if (indexOfcalories == 1) {
+      calorieofFood = 389;
+    } else if (indexOfcalories == 2) {
+      calorieofFood = 300;
+    } else {
+      calorieofFood = 1;
+    }
+    print(total);
+    total = calorieofFood * quantity;
+    return total;
   }
 
   // double totalCalories(String label, int quantity) {
