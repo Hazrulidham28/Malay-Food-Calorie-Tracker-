@@ -6,6 +6,7 @@ class User {
   late double weight;
   late double height;
   late int age;
+  late String gender;
   late String activityLevel;
   late String userProfile;
 
@@ -17,6 +18,7 @@ class User {
     required this.weight,
     required this.height,
     required this.age,
+    required this.gender,
     required this.activityLevel,
     required this.userProfile,
   });
@@ -31,6 +33,7 @@ class User {
       'weight': weight,
       'height': height,
       'age': age,
+      'gender': gender,
       'activityLevel': activityLevel,
       'userProfile': userProfile,
     };
@@ -45,6 +48,7 @@ class User {
         weight = map['weight'],
         height = map['height'],
         age = map['age'],
+        gender = map['gender'],
         activityLevel = map['activityLevel'],
         userProfile = map['userProfile'];
 }

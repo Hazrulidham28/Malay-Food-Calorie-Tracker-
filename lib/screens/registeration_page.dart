@@ -41,6 +41,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         double height1 = double.parse(_heightController.text);
         int age1 = int.parse(_ageController.text);
         String activityLevel1 = _selectedActivityLevel;
+        String gender1 = _selectedGender;
         String userProfile1 = '';
 
         User regUser = User(
@@ -51,10 +52,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
           weight: weight1,
           height: height1,
           age: age1,
+          gender: gender1,
           activityLevel: activityLevel1,
           userProfile: userProfile1,
         );
 
+        //set the the user to provider class
         userProviders.setUser(regUser);
         await userProviders.registerUser();
         Navigator.pushReplacementNamed(context, '/home');

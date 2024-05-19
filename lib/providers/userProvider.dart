@@ -7,8 +7,6 @@ import '../models/user.dart';
 enum AuthStatus { Authenticated, Unauthenticated }
 
 class userProvider extends ChangeNotifier {
-  // late User _user;
-  // User get user => _user;
   User? userR;
   User? get user => userR;
 
@@ -18,6 +16,7 @@ class userProvider extends ChangeNotifier {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+//initializing
   userProvider() {
     _auth.authStateChanges().listen((auth.User? firebaseUser) {
       if (firebaseUser != null) {
@@ -100,6 +99,7 @@ class userProvider extends ChangeNotifier {
   Future<void> logoutUser() async {
     try {
       _auth.signOut();
+      //clear current user
       userR = null;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('isLoggedIn', false);

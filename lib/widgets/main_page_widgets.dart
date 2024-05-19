@@ -3,8 +3,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:iconsax/iconsax.dart';
+import '../controllers/foodServices.dart';
 import '../models/food.dart';
-import '../providers/tflite.dart'; // Update the import path for tflite.dart
+import '../providers/tflite.dart';
+import '../providers/userProvider.dart'; // Update the import path for tflite.dart
 
 class MainPageWidgets extends StatefulWidget {
   @override
@@ -20,6 +22,52 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     _quantityController.dispose();
     super.dispose();
   }
+
+  double totalCalories(String label, int quantity) {
+    //food calories for nasi lemak, roti canai and karipap
+    double foodCal = 0;
+    double totalCalorie = 0;
+
+    // Karipap = 130 calories
+    // nasi_lemak = 389 calories
+    // roti_canai = 300 calories
+
+    // Map of food labels to their respective calorie values
+
+    // Map<String, double> foodCalories = {
+    //   "karipap": 130,
+    //   "nasi_lemak": 389,
+    //   "roti_canai": 300,
+    // };
+
+    String truelabel = label.toString();
+    String testinglabels = "nasi_lemak";
+    // Convert label to lowercase for case-insensitive comparison
+    String lowercaseLabel = label.toLowerCase();
+    print('Label received: $truelabel');
+    print('Lowercase label: $lowercaseLabel');
+
+    // // Get the calorie value from the map or default to 1 if not found
+    // foodCal = foodCalories[truelabel] ?? 1;
+
+    if (truelabel == "karipap") {
+      foodCal = 130;
+    } else if (truelabel == "roti_canai") {
+      foodCal = 300;
+    } else if (truelabel == "nasi_lemak") {
+      foodCal = 389;
+    } else {
+      foodCal = 1; // Default calorie value if label doesn't match
+    }
+
+    totalCalorie = foodCal * quantity;
+    print('Calculated foodCal: $foodCal');
+    print('Total calorie: $totalCalorie');
+
+    return totalCalorie;
+  }
+
+  final FoodService _foodService = FoodService();
 
   final appBar = AppBar(
     automaticallyImplyLeading: false,
@@ -67,6 +115,8 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider userProviders =
+        Provider.of<userProvider>(context, listen: false);
     return Consumer<Tflite>(
       builder: (context, tflite, child) {
         return Scaffold(
@@ -292,6 +342,16 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         ),
                         TextButton(
                           onPressed: () {
+                            double totalcal = totalCalories(
+                                tflite.predLabel.toString(), _quantity);
+                            //pass the food label, and quantity to the save food controller
+                            //may need to use await
+                            _foodService.saveFoodData(
+                                userProviders.userR!.userId,
+                                label,
+                                _quantity,
+                                totalcal,
+                                tflite.img!);
                             Navigator.of(context).pop();
                           },
                           child: Text("Save"),

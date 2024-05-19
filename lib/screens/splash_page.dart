@@ -39,6 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Display the splash screen for a few seconds
     await Future.delayed(Duration(seconds: 3));
 
+    //check authentication status
     if (userProviders.status == AuthStatus.Authenticated) {
       Navigator.pushReplacement(
         context,
