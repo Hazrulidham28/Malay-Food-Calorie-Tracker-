@@ -1,7 +1,7 @@
 class Food {
   final String foodId;
   final String foodName;
-  final int foodCal;
+  final double foodCal;
   final String imageUrl;
 
   Food(

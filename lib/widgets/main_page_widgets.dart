@@ -16,6 +16,8 @@ class MainPageWidgets extends StatefulWidget {
 class _MainPageWidgetsState extends State<MainPageWidgets> {
   final TextEditingController _quantityController = TextEditingController();
   int _quantity = 1; // Initial quantity
+  final FoodService _foodService = FoodService();
+  List<Food> _todaysMeals = [];
 
   @override
   void dispose() {
@@ -23,51 +25,11 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     super.dispose();
   }
 
-  double totalCalories(String label, int quantity) {
-    //food calories for nasi lemak, roti canai and karipap
-    double foodCal = 0;
-    double totalCalorie = 0;
-
-    // Karipap = 130 calories
-    // nasi_lemak = 389 calories
-    // roti_canai = 300 calories
-
-    // Map of food labels to their respective calorie values
-
-    // Map<String, double> foodCalories = {
-    //   "karipap": 130,
-    //   "nasi_lemak": 389,
-    //   "roti_canai": 300,
-    // };
-
-    String truelabel = label.toString();
-    String testinglabels = "nasi_lemak";
-    // Convert label to lowercase for case-insensitive comparison
-    String lowercaseLabel = label.toLowerCase();
-    print('Label received: $truelabel');
-    print('Lowercase label: $lowercaseLabel');
-
-    // // Get the calorie value from the map or default to 1 if not found
-    // foodCal = foodCalories[truelabel] ?? 1;
-
-    if (truelabel == "karipap") {
-      foodCal = 130;
-    } else if (truelabel == "roti_canai") {
-      foodCal = 300;
-    } else if (truelabel == "nasi_lemak") {
-      foodCal = 389;
-    } else {
-      foodCal = 1; // Default calorie value if label doesn't match
-    }
-
-    totalCalorie = foodCal * quantity;
-    print('Calculated foodCal: $foodCal');
-    print('Total calorie: $totalCalorie');
-
-    return totalCalorie;
+  @override
+  void initState() {
+    _fetchTodaysMeals();
+    super.initState();
   }
-
-  final FoodService _foodService = FoodService();
 
   final appBar = AppBar(
     automaticallyImplyLeading: false,
@@ -80,38 +42,48 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     ),
   );
 
-  List<Food> foods = [
-    Food(
-        foodId: '1',
-        foodName: 'Nasi Lemak',
-        foodCal: 52,
-        imageUrl:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Nasi_Lemak_dengan_Chili_Nasi_Lemak_dan_Sotong_Pedas%2C_di_Penang_Summer_Restaurant.jpg/375px-Nasi_Lemak_dengan_Chili_Nasi_Lemak_dan_Sotong_Pedas%2C_di_Penang_Summer_Restaurant.jpg'),
-    Food(
-        foodId: '2',
-        foodName: 'Roti Canai',
-        foodCal: 105,
-        imageUrl:
-            'https://www.elmundoeats.com/wp-content/uploads/2017/11/Roti-Canai-3.jpg'),
-    Food(
-        foodId: '3',
-        foodName: 'Ayam Goreng',
-        foodCal: 165,
-        imageUrl:
-            'https://www.yummytummyaarthi.com/wp-content/uploads/2023/08/1-scaled-1.jpeg'),
-    Food(
-        foodId: '4',
-        foodName: 'Broccoli',
-        foodCal: 55,
-        imageUrl:
-            'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTyN7CNzcBzQLqrMiGwOU1etbewP-Hlaz4_pjBSxQYoAuWseWo7'),
-    Food(
-        foodId: '5',
-        foodName: 'Satay',
-        foodCal: 280,
-        imageUrl:
-            'https://www.ajinomotofoodbizpartner.com.my/wp-content/uploads/2023/11/Satay-mobile-02-jpg.webp'),
-  ];
+  // List<Food> foods = [
+  //   Food(
+  //       foodId: '1',
+  //       foodName: 'Nasi Lemak',
+  //       foodCal: 52,
+  //       imageUrl:
+  //           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Nasi_Lemak_dengan_Chili_Nasi_Lemak_dan_Sotong_Pedas%2C_di_Penang_Summer_Restaurant.jpg/375px-Nasi_Lemak_dengan_Chili_Nasi_Lemak_dan_Sotong_Pedas%2C_di_Penang_Summer_Restaurant.jpg'),
+  //   Food(
+  //       foodId: '2',
+  //       foodName: 'Roti Canai',
+  //       foodCal: 105,
+  //       imageUrl:
+  //           'https://www.elmundoeats.com/wp-content/uploads/2017/11/Roti-Canai-3.jpg'),
+  //   Food(
+  //       foodId: '3',
+  //       foodName: 'Ayam Goreng',
+  //       foodCal: 165,
+  //       imageUrl:
+  //           'https://www.yummytummyaarthi.com/wp-content/uploads/2023/08/1-scaled-1.jpeg'),
+  //   Food(
+  //       foodId: '4',
+  //       foodName: 'Broccoli',
+  //       foodCal: 55,
+  //       imageUrl:
+  //           'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTyN7CNzcBzQLqrMiGwOU1etbewP-Hlaz4_pjBSxQYoAuWseWo7'),
+  //   Food(
+  //       foodId: '5',
+  //       foodName: 'Satay',
+  //       foodCal: 280,
+  //       imageUrl:
+  //           'https://www.ajinomotofoodbizpartner.com.my/wp-content/uploads/2023/11/Satay-mobile-02-jpg.webp'),
+  // ];
+
+  Future<void> _fetchTodaysMeals() async {
+    final userProvider userProviders =
+        Provider.of<userProvider>(context, listen: false);
+    final List<Food> meals =
+        await _foodService.getTodaysMeals(userProviders.userR!.userId);
+    setState(() {
+      _todaysMeals = meals;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -218,29 +190,38 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         appBar.preferredSize.height -
                         MediaQuery.of(context).padding.top) *
                     0.5,
-                child: ListView.builder(
-                  itemCount: foods.length, // Use foods.length directly
-                  itemBuilder: (ctx, index) {
-                    final Food food = foods[
-                        index]; // Access food directly from the foods list
-                    return Card(
-                      elevation: 4,
-                      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(food.imageUrl),
+                child: _todaysMeals.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No meals recorded for today',
+                          style: TextStyle(fontSize: 16),
                         ),
-                        title: Text(
-                          food.foodName, // Use food's name from the list
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                        subtitle: Text(
-                            '${food.foodCal} Calories'), // Use food's calorie from the list
+                      )
+                    : ListView.builder(
+                        itemCount:
+                            _todaysMeals.length, // Use foods.length directly
+                        itemBuilder: (ctx, index) {
+                          final Food food = _todaysMeals[
+                              index]; // Access food directly from the foods list
+                          return Card(
+                            elevation: 4,
+                            margin: EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 5),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 30,
+                                backgroundImage: NetworkImage(food.imageUrl),
+                              ),
+                              title: Text(
+                                food.foodName, // Use food's name from the list
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                              subtitle: Text(
+                                  '${food.foodCal} calories'), // Use food's calorie from the list
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ],
           ),
@@ -352,6 +333,9 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                                 _quantity,
                                 tflite.caloriesIndex as int,
                                 tflite.img!);
+                            setState(() {
+                              _fetchTodaysMeals();
+                            });
                             Navigator.of(context).pop();
                           },
                           child: Text("Save"),
