@@ -109,4 +109,45 @@ class userProvider extends ChangeNotifier {
       throw e;
     }
   }
+
+  double getDailyIntake() {
+    double BMR = 0;
+
+    if (user!.gender.toLowerCase() == 'male') {
+      BMR = 88.362 +
+          (13.397 * user!.weight) +
+          (4.799 * user!.height) -
+          (5.677 * user!.age);
+    } else {
+      BMR = 447.593 +
+          (9.247 * user!.weight) +
+          (3.098 * user!.height) -
+          (4.330 * user!.age);
+    }
+
+    double activityFactor = 0, dailyIntake = 0;
+
+    switch (user!.activityLevel.toLowerCase()) {
+      case 'sedentary':
+        activityFactor = 1.2;
+        break;
+      case 'lightly active':
+        activityFactor = 1.375;
+        break;
+      case 'moderately active':
+        activityFactor = 1.55;
+        break;
+      case 'very active':
+        activityFactor = 1.725;
+        break;
+      case 'extra active':
+        activityFactor = 1.9;
+        break;
+      default:
+        activityFactor = 1.2;
+    }
+
+    dailyIntake = BMR * activityFactor;
+    return dailyIntake;
+  }
 }

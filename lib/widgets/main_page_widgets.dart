@@ -7,6 +7,7 @@ import '../controllers/foodServices.dart';
 import '../models/food.dart';
 import '../providers/tflite.dart';
 import '../providers/userProvider.dart'; // Update the import path for tflite.dart
+import 'dart:math';
 
 class MainPageWidgets extends StatefulWidget {
   @override
@@ -18,6 +19,9 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
   int _quantity = 1; // Initial quantity
   final FoodService _foodService = FoodService();
   List<Food> _todaysMeals = [];
+  double _totalCalories = 0;
+  double dailyIntake = 0;
+  double _remainingCal = 0;
 
   @override
   void dispose() {
@@ -35,7 +39,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     automaticallyImplyLeading: false,
     title: Container(
       alignment: Alignment.center,
-      child: Text(
+      child: const Text(
         'Malay Food Calorie Tracker',
         textAlign: TextAlign.right,
       ),
@@ -78,10 +82,16 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
   Future<void> _fetchTodaysMeals() async {
     final userProvider userProviders =
         Provider.of<userProvider>(context, listen: false);
+    dailyIntake = userProviders.getDailyIntake();
+
     final List<Food> meals =
         await _foodService.getTodaysMeals(userProviders.userR!.userId);
+    double totalcalories = meals.fold(0, (sum, meal) => sum + meal.foodCal);
+
     setState(() {
       _todaysMeals = meals;
+      _totalCalories = totalcalories;
+      _remainingCal = dailyIntake - totalcalories;
     });
   }
 
@@ -95,10 +105,10 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
           appBar: appBar,
           body: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 15,
               ),
-              Text(
+              const Text(
                 'Daily Calories',
                 style: TextStyle(fontSize: 15),
               ),
@@ -116,20 +126,20 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                     children: [
                       Container(
                         width: 100,
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             Text(
-                              '1200',
-                              style: TextStyle(
+                              '${_totalCalories.toStringAsFixed(0)}',
+                              style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold),
                             ),
-                            Text(
+                            const Text(
                               'calories consumed',
                               style: TextStyle(fontSize: 14),
                               textAlign: TextAlign.center,
@@ -139,34 +149,37 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                       ),
                       CircularPercentIndicator(
                         radius: 55,
-                        percent: 0.51,
+                        percent: min(_totalCalories / dailyIntake,
+                            1.0), // Ensure the percentage doesn't exceed 1.0
                         center: Container(
                           width: 60,
                           child: Text(
-                            '1200 / 2000 ',
+                            '${_totalCalories.toStringAsFixed(0)} / ${dailyIntake.toStringAsFixed(0)}',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 14),
+                            style: const TextStyle(fontSize: 14),
                           ),
                         ),
-                        progressColor: Colors.green,
+                        progressColor: _totalCalories > dailyIntake
+                            ? Colors.red
+                            : Colors.green, // Change color if over limit
                       ),
                       Container(
                         width: 100,
-                        child: const Column(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             Text(
-                              '800',
-                              style: TextStyle(
+                              '${_remainingCal.toStringAsFixed(0)}',
+                              style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
                             ),
-                            Text(
+                            const Text(
                               'calories remaining',
                               style: TextStyle(fontSize: 14),
                               textAlign: TextAlign.center,
@@ -178,7 +191,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                   ),
                 ),
               ),
-              Text(
+              const Text(
                 'Recent Meal',
                 style: TextStyle(fontSize: 15),
               ),
@@ -191,7 +204,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         MediaQuery.of(context).padding.top) *
                     0.5,
                 child: _todaysMeals.isEmpty
-                    ? Center(
+                    ? const Center(
                         child: Text(
                           'No meals recorded for today',
                           style: TextStyle(fontSize: 16),
@@ -205,7 +218,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                               index]; // Access food directly from the foods list
                           return Card(
                             elevation: 4,
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 5),
                             child: ListTile(
                               leading: CircleAvatar(
@@ -230,7 +243,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 },
@@ -246,7 +259,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                     double confidences = tflite.confidence as double;
                     String formattedConfidence = confidences.toStringAsFixed(2);
                     return AlertDialog(
-                      title: Center(child: Text("Captured Image")),
+                      title: const Center(child: Text("Captured Image")),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,10 +336,6 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         ),
                         TextButton(
                           onPressed: () {
-                            // double totalcal = totalCalories(
-                            //     tflite.predLabel.toString(), _quantity);
-                            //pass the food label, and quantity to the save food controller
-                            //may need to use await
                             _foodService.saveFoodData(
                                 userProviders.userR!.userId,
                                 label,

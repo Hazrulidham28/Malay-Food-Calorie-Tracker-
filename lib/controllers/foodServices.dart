@@ -12,6 +12,7 @@ class FoodService {
       int caloriesIndex, File foodImage) async {
     String foodID = _firestore.collection('foods').doc().id;
     try {
+      // File compressedImage = await compressImage(foodImage);
       //upload food image to firebase storage
       String imageURL = await _uploadFoodImage(userID, foodImage);
 
