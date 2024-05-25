@@ -18,6 +18,9 @@ class _HomePageState extends State<HomePage> {
     ProfilePage(),
   ];
 
+  //may need to use pop method to navigate the pages instead of push replacement
+  // for better user experience and not refreshing widgets everytimes
+
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(

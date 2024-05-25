@@ -49,6 +49,14 @@ class userProvider extends ChangeNotifier {
     }
   }
 
+  // need to do some step in setting the user photo in firebase
+  // 1) upload the profile photo in the firebase through the location users/$userID/profile_images
+  // 2) get the url location of the uploaded profile photo by using get download url funtion
+  // 3) save the url location of uploadd profile photo into the firebase using the function setUserphoto()
+  // 4) set the latest url location into the user provider
+  // 5) reloaded the image uploaded....
+  Future<void> setUserphoto() async {}
+
   void setUser(User thisUser) {
     userR = thisUser;
   }

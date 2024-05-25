@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:malay_food_cal_tracker/models/food.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FoodService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -12,9 +14,9 @@ class FoodService {
       int caloriesIndex, File foodImage) async {
     String foodID = _firestore.collection('foods').doc().id;
     try {
-      // File compressedImage = await compressImage(foodImage);
+      final compressedImage = await CompressAndGetFile(foodImage);
       //upload food image to firebase storage
-      String imageURL = await _uploadFoodImage(userID, foodImage);
+      String imageURL = await _uploadFoodImage(userID, compressedImage);
 
       // Get current date
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -83,6 +85,24 @@ class FoodService {
       print('Error uploading food image:$e');
       throw e;
     }
+  }
+
+  Future<File> CompressAndGetFile(File file) async {
+    final dir = await getTemporaryDirectory();
+    final targetPath =
+        '${dir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 78,
+      // rotate: 180,
+    );
+
+    print('Original size: ${file.lengthSync()}');
+    print('Compressed size: ${File(result!.path).lengthSync()}');
+
+    return File(result.path);
   }
 
   double getCalories(int indexOfcalories, int quantity) {

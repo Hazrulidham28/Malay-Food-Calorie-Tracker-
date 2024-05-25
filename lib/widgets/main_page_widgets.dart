@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -22,6 +25,8 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
   double _totalCalories = 0;
   double dailyIntake = 0;
   double _remainingCal = 0;
+  File? _compressedFile;
+  File? _imageFile;
 
   @override
   void dispose() {
@@ -46,39 +51,6 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     ),
   );
 
-  // List<Food> foods = [
-  //   Food(
-  //       foodId: '1',
-  //       foodName: 'Nasi Lemak',
-  //       foodCal: 52,
-  //       imageUrl:
-  //           'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Nasi_Lemak_dengan_Chili_Nasi_Lemak_dan_Sotong_Pedas%2C_di_Penang_Summer_Restaurant.jpg/375px-Nasi_Lemak_dengan_Chili_Nasi_Lemak_dan_Sotong_Pedas%2C_di_Penang_Summer_Restaurant.jpg'),
-  //   Food(
-  //       foodId: '2',
-  //       foodName: 'Roti Canai',
-  //       foodCal: 105,
-  //       imageUrl:
-  //           'https://www.elmundoeats.com/wp-content/uploads/2017/11/Roti-Canai-3.jpg'),
-  //   Food(
-  //       foodId: '3',
-  //       foodName: 'Ayam Goreng',
-  //       foodCal: 165,
-  //       imageUrl:
-  //           'https://www.yummytummyaarthi.com/wp-content/uploads/2023/08/1-scaled-1.jpeg'),
-  //   Food(
-  //       foodId: '4',
-  //       foodName: 'Broccoli',
-  //       foodCal: 55,
-  //       imageUrl:
-  //           'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTyN7CNzcBzQLqrMiGwOU1etbewP-Hlaz4_pjBSxQYoAuWseWo7'),
-  //   Food(
-  //       foodId: '5',
-  //       foodName: 'Satay',
-  //       foodCal: 280,
-  //       imageUrl:
-  //           'https://www.ajinomotofoodbizpartner.com.my/wp-content/uploads/2023/11/Satay-mobile-02-jpg.webp'),
-  // ];
-
   Future<void> _fetchTodaysMeals() async {
     final userProvider userProviders =
         Provider.of<userProvider>(context, listen: false);
@@ -94,6 +66,20 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
       _remainingCal = dailyIntake - totalcalories;
     });
   }
+
+  // just added the File() so its can be converted to the File type instead of XFile
+  // need a better internet connection to test the effectiveness of compressing image quality...
+
+  // Future<void> compress() async {
+  //   var result = await FlutterImageCompress.compressAndGetFile(
+  //     _imageFile!.absolute.path,
+  //     _imageFile!.path + 'compressed.jpg',
+  //     quality: 88,
+  //   );
+  //   setState(() {
+  //     _compressedFile = File(result!.path);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -336,15 +322,22 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         ),
                         TextButton(
                           onPressed: () {
+                            // setState(() {
+                            //   _imageFile = File(tflite.img!.path);
+                            // });
+                            // compress();
                             _foodService.saveFoodData(
                                 userProviders.userR!.userId,
                                 label,
                                 _quantity,
                                 tflite.caloriesIndex as int,
                                 tflite.img!);
-                            setState(() {
-                              _fetchTodaysMeals();
-                            });
+                            // setState(() {
+                            //   _fetchTodaysMeals();
+                            // });
+                            //add state to refresh the widget
+
+                            //
                             Navigator.of(context).pop();
                           },
                           child: Text("Save"),
