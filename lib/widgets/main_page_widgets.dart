@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -25,8 +22,6 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
   double _totalCalories = 0;
   double dailyIntake = 0;
   double _remainingCal = 0;
-  File? _compressedFile;
-  File? _imageFile;
 
   @override
   void dispose() {
@@ -67,20 +62,6 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     });
   }
 
-  // just added the File() so its can be converted to the File type instead of XFile
-  // need a better internet connection to test the effectiveness of compressing image quality...
-
-  // Future<void> compress() async {
-  //   var result = await FlutterImageCompress.compressAndGetFile(
-  //     _imageFile!.absolute.path,
-  //     _imageFile!.path + 'compressed.jpg',
-  //     quality: 88,
-  //   );
-  //   setState(() {
-  //     _compressedFile = File(result!.path);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     final userProvider userProviders =
@@ -91,9 +72,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
           appBar: appBar,
           body: Column(
             children: [
-              const SizedBox(
-                height: 15,
-              ),
+              const SizedBox(height: 15),
               const Text(
                 'Daily Calories',
                 style: TextStyle(fontSize: 15),
@@ -115,15 +94,14 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            const SizedBox(height: 20),
                             Text(
                               '${_totalCalories.toStringAsFixed(0)}',
                               style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold),
+                                fontSize: 14,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const Text(
                               'calories consumed',
@@ -154,15 +132,14 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            const SizedBox(height: 20),
                             Text(
                               '${_remainingCal.toStringAsFixed(0)}',
                               style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold),
+                                fontSize: 14,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                             const Text(
@@ -181,7 +158,6 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                 'Recent Meal',
                 style: TextStyle(fontSize: 15),
               ),
-
               // List of meals eaten on the day
               Container(
                 width: 380,
@@ -238,120 +214,159 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
               Navigator.of(context).pop(); // Close the loading dialog
               if (tflite.img != null) {
                 // ignore: use_build_context_synchronously
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    String label = tflite.predLabel ?? "Label not found";
-                    double confidences = tflite.confidence as double;
-                    String formattedConfidence = confidences.toStringAsFixed(2);
-                    return AlertDialog(
-                      title: const Center(child: Text("Captured Image")),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                width: 200,
-                                height: 200,
-                                child: Image.file(tflite.img!),
-                              ),
-                              SizedBox(height: 20),
-                              Text("Label: $label"),
-                              SizedBox(height: 20),
-                              Text("Confidence: $formattedConfidence"),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        if (_quantity > 1) {
-                                          _quantity--;
-                                          _quantityController.text =
-                                              _quantity.toString();
-                                        }
-                                      });
-                                    },
-                                    icon: Icon(Iconsax.minus),
-                                  ),
-                                  SizedBox(width: 5),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _quantity++;
-                                        _quantityController.text =
-                                            _quantity.toString();
-                                      });
-                                    },
-                                    icon: Icon(Iconsax.add),
-                                  ),
-                                  SizedBox(width: 10),
-                                  SizedBox(
-                                    width: 40,
-                                    height: 50,
-                                    child: TextField(
-                                      controller: _quantityController,
-                                      keyboardType: TextInputType.number,
-                                      textAlign: TextAlign.center,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                      ),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _quantity = int.tryParse(value) ?? 1;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Close"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // setState(() {
-                            //   _imageFile = File(tflite.img!.path);
-                            // });
-                            // compress();
-                            _foodService.saveFoodData(
-                                userProviders.userR!.userId,
-                                label,
-                                _quantity,
-                                tflite.caloriesIndex as int,
-                                tflite.img!);
-                            // setState(() {
-                            //   _fetchTodaysMeals();
-                            // });
-                            //add state to refresh the widget
-
-                            //
-                            Navigator.of(context).pop();
-                          },
-                          child: Text("Save"),
-                        ),
-                      ],
-                    );
-                  },
-                );
+                _showCapturedImageDialog(context, tflite);
               }
             },
             child: Icon(Iconsax.camera),
           ),
         );
       },
+    );
+  }
+
+  void _showCapturedImageDialog(BuildContext context, Tflite tflite) {
+    String label = tflite.predLabel ?? "Label not found";
+    double confidences = tflite.confidence as double;
+    String formattedConfidence = confidences.toStringAsFixed(2);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Center(child: Text("Captured Image")),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Container(
+                    width: 200,
+                    height: 200,
+                    child: Image.file(tflite.img!),
+                  ),
+                  SizedBox(height: 20),
+                  Text("Label: $label"),
+                  SizedBox(height: 20),
+                  Text("Confidence: $formattedConfidence"),
+                  SizedBox(height: 20),
+                  _buildQuantityControl(),
+                ],
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Close"),
+            ),
+            TextButton(
+              onPressed: () async {
+                // Show loading dialog
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+
+                try {
+                  // Save food data
+                  await _foodService.saveFoodData(
+                    Provider.of<userProvider>(context, listen: false)
+                        .userR!
+                        .userId,
+                    label,
+                    _quantity,
+                    tflite.caloriesIndex as int,
+                    tflite.img!,
+                  );
+
+                  // Dismiss loading dialog
+                  Navigator.of(context).pop(); // Close the loading dialog
+                  Navigator.of(context)
+                      .pop(); // Close the captured image dialog
+                  _fetchTodaysMeals();
+
+                  // Show success snackbar
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Food data saved successfully!'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                } catch (error) {
+                  // Dismiss loading dialog
+                  Navigator.of(context).pop(); // Close the loading dialog
+
+                  // Show error snackbar
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text('Failed to save food data. Please try again.'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
+              child: Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildQuantityControl() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              if (_quantity > 1) {
+                _quantity--;
+                _quantityController.text = _quantity.toString();
+              }
+            });
+          },
+          icon: Icon(Iconsax.minus),
+        ),
+        SizedBox(width: 5),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _quantity++;
+              _quantityController.text = _quantity.toString();
+            });
+          },
+          icon: Icon(Iconsax.add),
+        ),
+        SizedBox(width: 10),
+        SizedBox(
+          width: 40,
+          height: 50,
+          child: TextField(
+            controller: _quantityController,
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _quantity = int.tryParse(value) ?? 1;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 }

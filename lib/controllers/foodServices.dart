@@ -95,7 +95,7 @@ class FoodService {
     var result = await FlutterImageCompress.compressAndGetFile(
       file.absolute.path,
       targetPath,
-      quality: 78,
+      quality: 48,
       // rotate: 180,
     );
 
