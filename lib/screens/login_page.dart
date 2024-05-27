@@ -3,13 +3,22 @@ import 'package:provider/provider.dart';
 import '../providers/userProvider.dart';
 import 'home_page.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
-  void _login(BuildContext context) async {
+  Future<void> _login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       try {
         final userProviders = Provider.of<userProvider>(context, listen: false);
         await userProviders.loginUser(
@@ -24,6 +33,10 @@ class LoginPage extends StatelessWidget {
             duration: Duration(seconds: 2),
           ),
         );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -111,13 +124,15 @@ class LoginPage extends StatelessWidget {
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
-                      onPressed: () => _login(context),
+                      onPressed: _isLoading ? null : () => _login(context),
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
-                      child: Text('Login'),
+                      child: _isLoading
+                          ? CircularProgressIndicator()
+                          : Text('Login'),
                     ),
                   ),
                 ],

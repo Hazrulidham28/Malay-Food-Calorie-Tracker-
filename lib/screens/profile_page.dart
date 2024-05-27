@@ -25,7 +25,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProviders = Provider.of<userProvider>(context, listen: false);
-    final user = userProviders.user;
+    final user = userProviders.userR;
     final String imageurl =
         'https://upload.wikimedia.org/wikipedia/commons/f/f3/Adolf_Hitler.png';
 

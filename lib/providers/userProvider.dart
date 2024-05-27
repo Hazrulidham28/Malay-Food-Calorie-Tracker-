@@ -16,20 +16,20 @@ class userProvider extends ChangeNotifier {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-//initializing
+  // Initializing
   userProvider() {
     _auth.authStateChanges().listen((auth.User? firebaseUser) {
       if (firebaseUser != null) {
-        checkLoginStatus();
         _setLoggedInUser(firebaseUser);
       } else {
         userR = null;
+        _status = AuthStatus.Unauthenticated;
         notifyListeners();
       }
     });
   }
 
-  //check login status if authenticated or not
+  // Check login status if authenticated or not
   Future<void> checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
@@ -38,27 +38,28 @@ class userProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //set loggedinuser
-  void _setLoggedInUser(auth.User? firebaseUser) async {
-    if (firebaseUser != null) {
-      DocumentSnapshot userSnapshot =
-          await _firestore.collection('users').doc(firebaseUser.uid).get();
+  // Set logged in user
+  Future<void> _setLoggedInUser(auth.User firebaseUser) async {
+    DocumentSnapshot userSnapshot =
+        await _firestore.collection('users').doc(firebaseUser.uid).get();
 
+    if (userSnapshot.exists) {
       userR = User.fromMap(userSnapshot.data() as Map<String, dynamic>);
+      _status = AuthStatus.Authenticated;
+      notifyListeners();
+    } else {
+      userR = null;
+      _status = AuthStatus.Unauthenticated;
       notifyListeners();
     }
   }
 
-  // need to do some step in setting the user photo in firebase
-  // 1) upload the profile photo in the firebase through the location users/$userID/profile_images
-  // 2) get the url location of the uploaded profile photo by using get download url funtion
-  // 3) save the url location of uploadd profile photo into the firebase using the function setUserphoto()
-  // 4) set the latest url location into the user provider
-  // 5) reloaded the image uploaded....
+  // Set user photo (implementation needed)
   Future<void> setUserphoto() async {}
 
   void setUser(User thisUser) {
     userR = thisUser;
+    notifyListeners();
   }
 
   Future<void> registerUser() async {
@@ -66,7 +67,9 @@ class userProvider extends ChangeNotifier {
       // Register the user with email and password
       auth.UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
-              email: userR!.email, password: userR!.password);
+        email: userR!.email,
+        password: userR!.password,
+      );
 
       // Update the user ID in the regUser instance
       userR!.userId = userCredential.user!.uid;
@@ -85,35 +88,41 @@ class userProvider extends ChangeNotifier {
     }
   }
 
-  //login the user
+  // Login the user
   Future<void> loginUser({
     required String email,
     required String password,
   }) async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      auth.UserCredential userCredential =
+          await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('isLoggedIn', true);
+
+      await _setLoggedInUser(userCredential.user!);
+      await checkLoginStatus();
     } catch (e) {
       print('Error logging in: $e');
       throw e;
     }
   }
 
-  //set logout
+  // Logout the user
   Future<void> logoutUser() async {
     try {
-      _auth.signOut();
-      //clear current user
-      userR = null;
+      await _auth.signOut();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('isLoggedIn', false);
+
+      userR = null;
+      _status = AuthStatus.Unauthenticated;
       notifyListeners();
     } catch (e) {
-      print('error logging out:$e');
+      print('Error logging out: $e');
       throw e;
     }
   }
@@ -121,7 +130,7 @@ class userProvider extends ChangeNotifier {
   double getDailyIntake() {
     double BMR = 0;
 
-    if (user!.gender.toLowerCase() == 'male') {
+    if (userR!.gender.toLowerCase() == 'male') {
       BMR = 88.362 +
           (13.397 * user!.weight) +
           (4.799 * user!.height) -
@@ -133,9 +142,10 @@ class userProvider extends ChangeNotifier {
           (4.330 * user!.age);
     }
 
-    double activityFactor = 0, dailyIntake = 0;
+    double activityFactor = 0;
+    double dailyIntake = 0;
 
-    switch (user!.activityLevel.toLowerCase()) {
+    switch (userR!.activityLevel.toLowerCase()) {
       case 'sedentary':
         activityFactor = 1.2;
         break;

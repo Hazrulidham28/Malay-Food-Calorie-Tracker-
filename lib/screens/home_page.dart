@@ -11,15 +11,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0; // Index of the selected bottom navigation bar item
 
-  // Define list of food items directly in the HomePage class
-
-  final _pages = [
+  // Define list of pages directly in the HomePage class
+  final List<Widget> _pages = [
     MainPageWidgets(),
     ProfilePage(),
   ];
-
-  //may need to use pop method to navigate the pages instead of push replacement
-  // for better user experience and not refreshing widgets everytimes
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +32,11 @@ class _HomePageState extends State<HomePage> {
     );
 
     return Scaffold(
-      body: _pages[_selectedIndex],
+      // appBar: appBar,
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
