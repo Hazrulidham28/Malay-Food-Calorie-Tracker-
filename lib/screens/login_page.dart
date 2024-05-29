@@ -135,6 +135,13 @@ class _LoginPageState extends State<LoginPage> {
                           : Text('Login'),
                     ),
                   ),
+                  SizedBox(height: 20.0),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: Text('New user? Register'),
+                  ),
                 ],
               ),
             ],

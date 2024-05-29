@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:malay_food_cal_tracker/screens/firstRegister_page.dart';
 import 'registeration_page.dart';
 import 'login_page.dart';
 
@@ -39,7 +40,7 @@ class LandingPage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RegistrationPage()),
+                            builder: (context) => FirstRegistrationPage()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

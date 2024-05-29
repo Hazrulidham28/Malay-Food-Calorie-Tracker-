@@ -241,14 +241,17 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
               Column(
                 children: [
                   Container(
-                    width: 200,
-                    height: 200,
+                    width: 150,
+                    height: 150,
                     child: Image.file(tflite.img!),
+                    decoration: BoxDecoration(shape: BoxShape.circle),
                   ),
                   SizedBox(height: 20),
                   Text("Label: $label"),
                   SizedBox(height: 20),
                   Text("Confidence: $formattedConfidence"),
+                  SizedBox(height: 20),
+                  Text("Serving:"),
                   SizedBox(height: 20),
                   _buildQuantityControl(),
                 ],

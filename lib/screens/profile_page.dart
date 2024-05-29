@@ -81,28 +81,23 @@ class ProfilePage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 40),
 
             // User Information Fields
-            _buildInputField(
-              context,
-              'Name',
-              user!.username,
-              Icon(Icons.person),
-            ),
+
             const SizedBox(height: 20),
-            _buildInputField(
+            _buildViewField(
               context,
               'Email',
-              user.email,
+              user!.email,
               Icon(Icons.email),
             ),
             const SizedBox(height: 20),
             _buildInputField(
               context,
-              'Password',
-              '*********',
-              Icon(Icons.password),
+              'User Name',
+              user.username,
+              Icon(Icons.person),
             ),
             const SizedBox(height: 20),
 
@@ -123,17 +118,17 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Delete Account Button
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent.withOpacity(0.1),
-                foregroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              child: const Text('Delete Account'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {},
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: Colors.redAccent.withOpacity(0.1),
+            //     foregroundColor: Colors.red,
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(20),
+            //     ),
+            //   ),
+            //   child: const Text('Delete Account'),
+            // ),
           ],
         ),
       ),
@@ -154,6 +149,20 @@ class ProfilePage extends StatelessWidget {
           onPressed: () {
             _openEditFieldModal(context, labelText, initialValue);
           },
+        ),
+      ),
+      child: Text(initialValue),
+    );
+  }
+
+  Widget _buildViewField(
+      BuildContext context, String labelText, String initialValue, Icon icon) {
+    return InputDecorator(
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: icon,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
       child: Text(initialValue),
