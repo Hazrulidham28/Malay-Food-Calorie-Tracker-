@@ -27,7 +27,7 @@ class ProfilePage extends StatelessWidget {
     final userProviders = Provider.of<userProvider>(context, listen: false);
     final user = userProviders.userR;
     final String imageurl =
-        'https://upload.wikimedia.org/wikipedia/commons/f/f3/Adolf_Hitler.png';
+        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
 
 //method to loggout the user and navigate to login page
     void _userLogout() {
@@ -51,32 +51,109 @@ class ProfilePage extends StatelessWidget {
           children: [
             // Profile Picture with Edit Button
             Stack(
-              alignment: Alignment.bottomRight,
+              alignment: Alignment.center,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Image.network(
-                    imageurl,
-                    width: 120,
-                    height: 120,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Text('Image not available');
-                    },
+                Container(
+                  width: double.infinity,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                Container(
-                  width: 35,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.green,
+                Positioned(
+                  left: 10,
+                  top: 20,
+                  child: SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: ClipOval(
+                      child: Image.network(
+                        imageurl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return const Text('Image not available');
+                        },
+                      ),
+                    ),
                   ),
-                  child: IconButton(
-                    icon: const Icon(Icons.edit),
-                    color: Colors.black,
-                    onPressed: () {
-                      // Handle edit profile picture
-                    },
+                ),
+                Positioned(
+                  top: 90,
+                  left: 80,
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.white,
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.edit, color: Colors.green, size: 20),
+                      onPressed: () {
+                        // Handle edit profile picture action
+                        //_openEditProfilePictureModal(context);
+                      },
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 25,
+                  left: 120,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user!.username,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Age: ${user.age}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'Weight: ${user.weight.toStringAsFixed(0)} Kg',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: 62,
+                  right: 10,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 5),
+                      Text(
+                        'Height: ${user.height.toStringAsFixed(0)} Cm',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        'BMI status: ${userProviders.getBmi()}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

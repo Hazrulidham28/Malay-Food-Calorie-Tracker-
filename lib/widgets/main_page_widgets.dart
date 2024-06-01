@@ -192,7 +192,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                                 style: Theme.of(context).textTheme.subtitle1,
                               ),
                               subtitle: Text(
-                                  '${food.foodCal} calories'), // Use food's calorie from the list
+                                  '${food.foodCal.toStringAsFixed(0)} calories'), // Use food's calorie from the list
                             ),
                           );
                         },

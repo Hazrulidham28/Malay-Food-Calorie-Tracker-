@@ -168,4 +168,23 @@ class userProvider extends ChangeNotifier {
     dailyIntake = BMR * activityFactor;
     return dailyIntake;
   }
+
+  String getBmi() {
+    String Bmilevel = "Unknown";
+    double Bmi;
+
+    Bmi = (userR!.weight / ((userR!.height / 100) * (userR!.height / 100)));
+
+    if (Bmi < 18.5) {
+      Bmilevel = "Underweight";
+    } else if (Bmi >= 18.5 && Bmi < 24.9) {
+      Bmilevel = "Normal";
+    } else if (Bmi >= 25 && Bmi < 29.9) {
+      Bmilevel = "Overweight";
+    } else {
+      Bmilevel = "Obesity";
+    }
+
+    return Bmilevel;
+  }
 }
