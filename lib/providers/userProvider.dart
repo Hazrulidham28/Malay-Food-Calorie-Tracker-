@@ -131,15 +131,9 @@ class userProvider extends ChangeNotifier {
     double BMR = 0;
 
     if (userR!.gender.toLowerCase() == 'male') {
-      BMR = 88.362 +
-          (13.397 * user!.weight) +
-          (4.799 * user!.height) -
-          (5.677 * user!.age);
+      BMR = (10 * user!.weight) + (6.25 * user!.height) - (5 * user!.age) + 5;
     } else {
-      BMR = 447.593 +
-          (9.247 * user!.weight) +
-          (3.098 * user!.height) -
-          (4.330 * user!.age);
+      BMR = (10 * user!.weight) + (6.25 * user!.height) - (5 * user!.age) - 161;
     }
 
     double activityFactor = 0;
