@@ -149,13 +149,13 @@ class ProfilePage extends StatelessWidget {
                 ),
                 Positioned(
                   top: 62,
-                  right: 12,
+                  right: 6,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 5),
                       Text(
-                        'Height: ${user.height.toStringAsFixed(0)} Cm',
+                        'Status: ${userProviders.getBmi()}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -163,7 +163,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 15),
                       Text(
-                        'Status: ${userProviders.getBmi()}',
+                        'Height: ${user.height.toStringAsFixed(0)} Cm',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,

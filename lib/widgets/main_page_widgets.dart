@@ -8,6 +8,7 @@ import '../models/food.dart';
 import '../providers/tflite.dart';
 import '../providers/userProvider.dart'; // Update the import path for tflite.dart
 import 'dart:math';
+import 'package:google_fonts/google_fonts.dart';
 
 class MainPageWidgets extends StatefulWidget {
   @override
@@ -39,9 +40,14 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     automaticallyImplyLeading: false,
     title: Container(
       alignment: Alignment.center,
-      child: const Text(
+      child: Text(
         'Malay Food Calorie Tracker',
         textAlign: TextAlign.right,
+        style: TextStyle(
+          fontSize: 32.0,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     ),
   );
@@ -68,172 +74,224 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
         Provider.of<userProvider>(context, listen: false);
     return Consumer<Tflite>(
       builder: (context, tflite, child) {
-        return Scaffold(
-          appBar: appBar,
-          body: Column(
-            children: [
-              const SizedBox(height: 15),
-              const Text(
-                'Daily Calories',
-                style: TextStyle(fontSize: 15),
-              ),
-              // Circular progress bar
-              Container(
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.3,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        15), // Adjust the radius as needed
-                  ),
-                  elevation: 9,
-                  margin: EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        width: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 20),
-                            Text(
-                              '${_totalCalories.toStringAsFixed(0)}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Text(
-                              'calories consumed',
-                              style: TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+        return SafeArea(
+          child: Scaffold(
+            //appBar: appBar,
+            body: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  //crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            15), // Adjust the radius as needed
+                      ),
+                      elevation: 7,
+                      color: Colors.green,
+                      child: Container(
+                        width: 380,
+                        height: 60,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Text(
+                          'Malay Food Calorie Tracker',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
-                      CircularPercentIndicator(
-                        radius: 70,
-                        backgroundColor: Colors.black12,
-                        circularStrokeCap: CircularStrokeCap.round,
-                        lineWidth: 15,
-                        percent: min(_totalCalories / dailyIntake,
-                            1.0), // Ensure the percentage doesn't exceed 1.0
-                        center: Container(
-                          width: 60,
-                          child: Text(
-                            '${_totalCalories.toStringAsFixed(0)} / ${dailyIntake.toStringAsFixed(0)}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 14),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                const Text(
+                  'Daily Calories',
+                  style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+                // Circular progress bar
+                Container(
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.3,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          15), // Adjust the radius as needed
+                    ),
+                    elevation: 9,
+                    margin: EdgeInsets.all(20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          width: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                '${_totalCalories.toStringAsFixed(0)}',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Text(
+                                'calories consumed',
+                                style: TextStyle(fontSize: 14),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         ),
-                        progressColor: _totalCalories > dailyIntake
-                            ? Colors.red
-                            : Colors.green, // Change color if over limit
-                      ),
-                      Container(
-                        width: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 20),
-                            Text(
-                              '${_remainingCal.toStringAsFixed(0)}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        CircularPercentIndicator(
+                          radius: 70,
+                          backgroundColor: Colors.black12,
+                          circularStrokeCap: CircularStrokeCap.round,
+                          lineWidth: 15,
+                          percent: min(_totalCalories / dailyIntake,
+                              1.0), // Ensure the percentage doesn't exceed 1.0
+                          center: Container(
+                            width: 60,
+                            child: Text(
+                              '${_totalCalories.toStringAsFixed(0)} / ${dailyIntake.toStringAsFixed(0)}',
                               textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 14),
                             ),
-                            const Text(
-                              'calories remaining',
-                              style: TextStyle(fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                          ),
+                          progressColor: _totalCalories > dailyIntake
+                              ? Colors.red
+                              : Colors.green, // Change color if over limit
                         ),
-                      ),
-                    ],
+                        Container(
+                          width: 100,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 20),
+                              Text(
+                                '${_remainingCal.toStringAsFixed(0)}',
+                                style: GoogleFonts.ruda(
+                                  textStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                'calories remaining',
+                                style: GoogleFonts.ruda(
+                                  textStyle: const TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const Text(
-                'Todays recent Meal',
-                style: TextStyle(fontSize: 15),
-              ),
-              // List of meals eaten on the day
-              Container(
-                width: 380,
-                height: (MediaQuery.of(context).size.height -
-                        appBar.preferredSize.height -
-                        MediaQuery.of(context).padding.top) *
-                    0.56,
-                child: _todaysMeals.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'No meals recorded for today',
-                          style: TextStyle(fontSize: 16),
+                Text(
+                  'Todays recent Meal',
+                  style: TextStyle(
+                      fontSize: 15.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
+                // List of meals eaten on the day
+                Container(
+                  width: 380,
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.519,
+                  child: _todaysMeals.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No meals recorded for today',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount:
+                              _todaysMeals.length, // Use foods.length directly
+                          itemBuilder: (ctx, index) {
+                            final Food food = _todaysMeals[
+                                index]; // Access food directly from the foods list
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    15), // Adjust the radius as needed
+                              ),
+                              elevation: 4,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 9, horizontal: 5),
+                              child: ListTile(
+                                trailing: Text(
+                                    '${food.servingQuant.toString()}  x serving',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w200)),
+                                leading: CircleAvatar(
+                                  radius: 30,
+                                  backgroundImage: NetworkImage(food.imageUrl),
+                                ),
+                                title: Text(
+                                  food.foodName,
+                                  style: TextStyle(
+                                      fontSize: 15.0,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight
+                                          .bold), // Use food's name from the list
+                                  //style: Theme.of(context).textTheme.subtitle1,
+                                ),
+                                subtitle: Text(
+                                    '${food.foodCal.toStringAsFixed(0)} calories'), // Use food's calorie from the list
+                              ),
+                            );
+                          },
                         ),
-                      )
-                    : ListView.builder(
-                        itemCount:
-                            _todaysMeals.length, // Use foods.length directly
-                        itemBuilder: (ctx, index) {
-                          final Food food = _todaysMeals[
-                              index]; // Access food directly from the foods list
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  15), // Adjust the radius as needed
-                            ),
-                            elevation: 4,
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 9, horizontal: 5),
-                            child: ListTile(
-                              trailing: Text(
-                                  '${food.servingQuant.toString()}  x serving',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.w200)),
-                              leading: CircleAvatar(
-                                radius: 30,
-                                backgroundImage: NetworkImage(food.imageUrl),
-                              ),
-                              title: Text(
-                                food.foodName, // Use food's name from the list
-                                style: Theme.of(context).textTheme.subtitle1,
-                              ),
-                              subtitle: Text(
-                                  '${food.foodCal.toStringAsFixed(0)} calories'), // Use food's calorie from the list
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            elevation: 4,
-            onPressed: () async {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              );
-              await tflite.btnAction(ImageSource.camera);
-              Navigator.of(context).pop(); // Close the loading dialog
-              if (tflite.img != null) {
-                // ignore: use_build_context_synchronously
-                _showCapturedImageDialog(context, tflite);
-              }
-            },
-            child: Icon(Iconsax.camera),
+                ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              elevation: 4,
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+                await tflite.btnAction(ImageSource.camera);
+                Navigator.of(context).pop(); // Close the loading dialog
+                if (tflite.img != null) {
+                  // ignore: use_build_context_synchronously
+                  _showCapturedImageDialog(context, tflite);
+                }
+              },
+              child: Icon(Iconsax.camera),
+            ),
           ),
         );
       },

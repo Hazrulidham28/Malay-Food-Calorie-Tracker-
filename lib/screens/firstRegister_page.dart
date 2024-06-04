@@ -31,20 +31,27 @@ class _FirstRegistrationPageState extends State<FirstRegistrationPage> {
                 children: [
                   Text(
                     'MalayFood',
-                    style: TextStyle(fontSize: 32.0, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 32.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               SizedBox(height: 5.0), // Add margin between widgets
               Text(
                 'CalorieTracker',
-                style: TextStyle(fontSize: 32.0, color: Colors.green),
+                style: TextStyle(
+                    fontSize: 32.0,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 60.0),
               TextFormField(
                 controller: _usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
+                  prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -62,6 +69,7 @@ class _FirstRegistrationPageState extends State<FirstRegistrationPage> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Email',
+                  prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -82,6 +90,7 @@ class _FirstRegistrationPageState extends State<FirstRegistrationPage> {
                 obscureText: !_passwordVisible,
                 decoration: InputDecoration(
                   labelText: 'Password',
+                  prefixIcon: Icon(Icons.key),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -114,6 +123,7 @@ class _FirstRegistrationPageState extends State<FirstRegistrationPage> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
+                  prefixIcon: Icon(Icons.key),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _confirmPasswordVisible

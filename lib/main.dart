@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:malay_food_cal_tracker/providers/tflite.dart';
 import 'package:malay_food_cal_tracker/providers/userProvider.dart';
 import 'package:malay_food_cal_tracker/screens/firstRegister_page.dart';
@@ -37,7 +38,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Landing Page',
         theme: ThemeData(
+          fontFamily: GoogleFonts.ruda().fontFamily,
           primarySwatch: Colors.green,
+          // textTheme: TextTheme(
+          //     titleMedium: GoogleFonts.acme(), titleSmall: GoogleFonts.acme()),
         ),
         home: SplashScreen(),
         debugShowCheckedModeBanner: false, // Remove debug label
