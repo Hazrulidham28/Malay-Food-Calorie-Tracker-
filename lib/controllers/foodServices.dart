@@ -57,6 +57,7 @@ class FoodService {
           foodName: doc['foodLabel'],
           foodCal: doc['calories'],
           imageUrl: doc['imageUrl'],
+          servingQuant: doc['quantity'],
         );
       }).toList();
 

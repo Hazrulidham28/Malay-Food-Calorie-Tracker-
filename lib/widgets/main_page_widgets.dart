@@ -117,8 +117,9 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                       ),
                       CircularPercentIndicator(
                         radius: 70,
+                        backgroundColor: Colors.black12,
                         circularStrokeCap: CircularStrokeCap.round,
-                        lineWidth: 9,
+                        lineWidth: 15,
                         percent: min(_totalCalories / dailyIntake,
                             1.0), // Ensure the percentage doesn't exceed 1.0
                         center: Container(
@@ -170,7 +171,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                 height: (MediaQuery.of(context).size.height -
                         appBar.preferredSize.height -
                         MediaQuery.of(context).padding.top) *
-                    0.5,
+                    0.56,
                 child: _todaysMeals.isEmpty
                     ? const Center(
                         child: Text(
@@ -191,8 +192,12 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                             ),
                             elevation: 4,
                             margin: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 5),
+                                vertical: 9, horizontal: 5),
                             child: ListTile(
+                              trailing: Text(
+                                  '${food.servingQuant.toString()}  x serving',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w200)),
                               leading: CircleAvatar(
                                 radius: 30,
                                 backgroundImage: NetworkImage(food.imageUrl),
@@ -244,7 +249,12 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Center(child: Text("Captured Image")),
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.circular(15), // Adjust the radius as needed
+          ),
+          elevation: 5,
+          title: const Center(child: Text("Detected food")),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
