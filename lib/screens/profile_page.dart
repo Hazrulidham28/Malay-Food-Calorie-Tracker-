@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:iconsax/iconsax.dart';
 import '../providers/userProvider.dart';
 
 class ProfileApp extends StatefulWidget {
@@ -28,6 +28,13 @@ class ProfilePage extends StatelessWidget {
     final user = userProviders.userR;
     final String imageurl =
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+    final List<String> _activityLevels = [
+      'Sedentary',
+      'Lightly active',
+      'Moderately active',
+      'Very active',
+      'Extra active'
+    ];
 
 //method to loggout the user and navigate to login page
     void _userLogout() {
@@ -42,7 +49,7 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Center(child: Text('Profile')),
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
@@ -53,12 +60,21 @@ class ProfilePage extends StatelessWidget {
             Stack(
               alignment: Alignment.center,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(20),
+                Card(
+                  elevation: 9,
+                  margin: EdgeInsets.all(0),
+                  color: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        15), // Adjust the radius as needed
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    // decoration: BoxDecoration(
+                    //   color: Colors.green,
+                    //   borderRadius: BorderRadius.circular(20),
+                    // ),
                   ),
                 ),
                 Positioned(
@@ -120,7 +136,7 @@ class ProfilePage extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 15),
                       Text(
                         'Weight: ${user.weight.toStringAsFixed(0)} Kg',
                         style: TextStyle(
@@ -133,7 +149,7 @@ class ProfilePage extends StatelessWidget {
                 ),
                 Positioned(
                   top: 62,
-                  right: 10,
+                  right: 12,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -145,9 +161,9 @@ class ProfilePage extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 15),
                       Text(
-                        'BMI status: ${userProviders.getBmi()}',
+                        'Status: ${userProviders.getBmi()}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -158,7 +174,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
 
             // User Information Fields
 
@@ -177,6 +193,41 @@ class ProfilePage extends StatelessWidget {
               Icon(Icons.person),
             ),
             const SizedBox(height: 20),
+            _buildInputField(
+              context,
+              'Activity level',
+              user.activityLevel,
+              Icon(Icons.health_and_safety),
+            ),
+            const SizedBox(height: 20),
+            _buildInputField(
+              context,
+              'Age',
+              user.age.toString(),
+              Icon(Icons.format_list_numbered),
+            ),
+            const SizedBox(height: 20),
+            _buildInputField(
+              context,
+              'Weight',
+              user.weight.toString(),
+              Icon(Icons.monitor_weight),
+            ),
+            const SizedBox(height: 20),
+            _buildInputField(
+              context,
+              'Gender',
+              user.gender,
+              Icon(Iconsax.profile_2user),
+            ),
+            const SizedBox(height: 20),
+            _buildInputField(
+              context,
+              'Height',
+              user.height.toString(),
+              Icon(Icons.height),
+            ),
+            const SizedBox(height: 20),
 
             // Log Out Button
             SizedBox(
@@ -193,19 +244,6 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Delete Account Button
-            // ElevatedButton(
-            //   onPressed: () {},
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: Colors.redAccent.withOpacity(0.1),
-            //     foregroundColor: Colors.red,
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(20),
-            //     ),
-            //   ),
-            //   child: const Text('Delete Account'),
-            // ),
           ],
         ),
       ),

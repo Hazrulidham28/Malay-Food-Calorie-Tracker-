@@ -84,7 +84,11 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         MediaQuery.of(context).padding.top) *
                     0.3,
                 child: Card(
-                  elevation: 6,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        15), // Adjust the radius as needed
+                  ),
+                  elevation: 9,
                   margin: EdgeInsets.all(20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -112,7 +116,9 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                         ),
                       ),
                       CircularPercentIndicator(
-                        radius: 55,
+                        radius: 70,
+                        circularStrokeCap: CircularStrokeCap.round,
+                        lineWidth: 9,
                         percent: min(_totalCalories / dailyIntake,
                             1.0), // Ensure the percentage doesn't exceed 1.0
                         center: Container(
@@ -155,7 +161,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                 ),
               ),
               const Text(
-                'Recent Meal',
+                'Todays recent Meal',
                 style: TextStyle(fontSize: 15),
               ),
               // List of meals eaten on the day
@@ -179,6 +185,10 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                           final Food food = _todaysMeals[
                               index]; // Access food directly from the foods list
                           return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  15), // Adjust the radius as needed
+                            ),
                             elevation: 4,
                             margin: const EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 5),
@@ -201,6 +211,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
             ],
           ),
           floatingActionButton: FloatingActionButton(
+            elevation: 4,
             onPressed: () async {
               showDialog(
                 context: context,

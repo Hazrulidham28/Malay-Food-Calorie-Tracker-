@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: Colors.white,
+        elevation: 10,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Iconsax.home),
