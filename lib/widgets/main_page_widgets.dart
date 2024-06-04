@@ -70,8 +70,6 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider userProviders =
-        Provider.of<userProvider>(context, listen: false);
     return Consumer<Tflite>(
       builder: (context, tflite, child) {
         return SafeArea(
