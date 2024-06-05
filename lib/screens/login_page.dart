@@ -56,12 +56,19 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text(
                     'MalayFood',
-                    style: TextStyle(fontSize: 32.0, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 32.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 5.0),
                   Text(
                     'CalorieTracker',
-                    style: TextStyle(fontSize: 32.0, color: Colors.green),
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 100.0),
                   Container(

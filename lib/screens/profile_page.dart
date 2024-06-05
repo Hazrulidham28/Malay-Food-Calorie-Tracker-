@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:malay_food_cal_tracker/controllers/userServices.dart';
+import 'package:malay_food_cal_tracker/widgets/main_page_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax/iconsax.dart';
 import '../providers/userProvider.dart';
@@ -21,20 +23,22 @@ class _ProfileAppState extends State<ProfileApp> {
   }
 }
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+  // Function? callback;
+
+  // ProfilePage(this.callback);
+}
+
+class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final userProviders = Provider.of<userProvider>(context, listen: false);
     final user = userProviders.userR;
     final String imageurl =
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-    final List<String> _activityLevels = [
-      'Sedentary',
-      'Lightly active',
-      'Moderately active',
-      'Very active',
-      'Extra active'
-    ];
+    final userService _userService = userService();
 
 //method to loggout the user and navigate to login page
     void _userLogout() {
@@ -132,7 +136,8 @@ class ProfilePage extends StatelessWidget {
                                               color: Colors.green, size: 20),
                                           onPressed: () {
                                             // Handle edit profile picture action
-                                            //_openEditProfilePictureModal(context);
+                                            _openImageSourceSelectionModal(
+                                                context);
                                           },
                                         ),
                                       ),
@@ -208,126 +213,7 @@ class ProfilePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                  )
-                  // Profile Picture with Edit Button
-                  // Stack(
-                  //   alignment: Alignment.center,
-                  //   children: [
-                  //     Card(
-                  //       elevation: 9,
-                  //       margin: EdgeInsets.all(0),
-                  //       color: Colors.green,
-                  //       shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(
-                  //             15), // Adjust the radius as needed
-                  //       ),
-                  //       child: Container(
-                  //         width: 380,
-                  //         height: 150,
-                  //         // decoration: BoxDecoration(
-                  //         //   color: Colors.green,
-                  //         //   borderRadius: BorderRadius.circular(20),
-                  //         // ),
-                  //       ),
-                  //     ),
-                  //     Positioned(
-                  //       left: 17,
-                  //       top: 32,
-                  //       child: SizedBox(
-                  //         width: 90,
-                  //         height: 90,
-                  //         child: ClipOval(
-                  //           child: Image.network(
-                  //             imageurl,
-                  //             fit: BoxFit.cover,
-                  //             errorBuilder: (BuildContext context, Object exception,
-                  //                 StackTrace? stackTrace) {
-                  //               return const Text('Image not available');
-                  //             },
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  // Positioned(
-                  //   top: 90,
-                  //   left: 80,
-                  //   child: Container(
-                  //     width: 35,
-                  //     height: 35,
-                  //     decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(100),
-                  //       color: Colors.white,
-                  //     ),
-                  //     child: IconButton(
-                  //       icon: Icon(Icons.edit, color: Colors.green, size: 20),
-                  //       onPressed: () {
-                  //         // Handle edit profile picture action
-                  //         //_openEditProfilePictureModal(context);
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-                  //     Positioned(
-                  //       top: 25,
-                  //       left: 140,
-                  //       child: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  // Text(
-                  //   user!.username,
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: 20,
-                  //     fontWeight: FontWeight.bold,
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 10),
-                  // Text(
-                  //   '${user.age} Years old',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: 16,
-                  //   ),
-                  // ),
-                  //           const SizedBox(height: 15),
-                  // Text(
-                  //   '${user.weight.toStringAsFixed(0)} Kg',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: 16,
-                  //   ),
-                  // ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Positioned(
-                  //       top: 58,
-                  //       right: 30,
-                  //       child: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  // const SizedBox(height: 5),
-                  // Text(
-                  //   '${userProviders.getBmi()}',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: 16,
-                  //   ),
-                  // ),
-                  //           const SizedBox(height: 15),
-                  // Text(
-                  //   '${user.height.toStringAsFixed(0)} Cm',
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //     fontSize: 16,
-                  //   ),
-                  // ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  ),
+                  )),
               const SizedBox(height: 10),
 
               // User Information Fields
@@ -345,62 +231,46 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 width: 380,
-                child: _buildInputField(
-                  context,
-                  'User Name',
-                  user.username,
-                  Icon(Icons.person),
-                ),
+                child: _buildInputField(context, 'User Name', user.username,
+                    Icon(Icons.person), userProviders),
               ),
               const SizedBox(height: 20),
               Container(
                 width: 380,
                 child: _buildInputField(
-                  context,
-                  'Activity level',
-                  user.activityLevel,
-                  Icon(Icons.health_and_safety),
-                ),
+                    context,
+                    'Activity level',
+                    user.activityLevel,
+                    Icon(Icons.health_and_safety),
+                    userProviders),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                width: 380,
+                child: _buildInputField(context, 'Age', user.age.toString(),
+                    Icon(Icons.format_list_numbered), userProviders),
               ),
               const SizedBox(height: 20),
               Container(
                 width: 380,
                 child: _buildInputField(
-                  context,
-                  'Age',
-                  user.age.toString(),
-                  Icon(Icons.format_list_numbered),
-                ),
+                    context,
+                    'Weight',
+                    user.weight.toString(),
+                    Icon(Icons.monitor_weight),
+                    userProviders),
               ),
               const SizedBox(height: 20),
               Container(
                 width: 380,
-                child: _buildInputField(
-                  context,
-                  'Weight',
-                  user.weight.toString(),
-                  Icon(Icons.monitor_weight),
-                ),
+                child: _buildInputField(context, 'Gender', user.gender,
+                    Icon(Iconsax.profile_2user), userProviders),
               ),
               const SizedBox(height: 20),
               Container(
                 width: 380,
-                child: _buildInputField(
-                  context,
-                  'Gender',
-                  user.gender,
-                  Icon(Iconsax.profile_2user),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: 380,
-                child: _buildInputField(
-                  context,
-                  'Height',
-                  user.height.toString(),
-                  Icon(Icons.height),
-                ),
+                child: _buildInputField(context, 'Height',
+                    user.height.toString(), Icon(Icons.height), userProviders),
               ),
               const SizedBox(height: 20),
 
@@ -426,8 +296,8 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInputField(
-      BuildContext context, String labelText, String initialValue, Icon icon) {
+  Widget _buildInputField(BuildContext context, String labelText,
+      String initialValue, Icon icon, userProvider providers) {
     return InputDecorator(
       decoration: InputDecoration(
         labelText: labelText,
@@ -438,7 +308,20 @@ class ProfilePage extends StatelessWidget {
         suffixIcon: IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
-            _openEditFieldModal(context, labelText, initialValue);
+            if (labelText == 'Age' ||
+                labelText == 'Weight' ||
+                labelText == 'Height') {
+              _openEditFieldModalNum(
+                  context, labelText, initialValue, providers);
+            } else if (labelText == 'Activity level') {
+              _openEditFieldModalListActivity(
+                  context, labelText, initialValue, providers);
+            } else if (labelText == 'Gender') {
+              _openEditFieldModalListGender(
+                  context, labelText, initialValue, providers);
+            } else {
+              _openEditFieldModal(context, labelText, initialValue, providers);
+            }
           },
         ),
       ),
@@ -460,21 +343,29 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _openEditFieldModal(
-      BuildContext context, String labelText, String initialValue) {
+  void _openEditFieldModal(BuildContext context, String labelText,
+      String initialValue, userProvider Providers) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          topRight: Radius.circular(15.0),
+        ),
+      ),
       builder: (BuildContext context) {
         String updatedValue = initialValue;
 
         return Container(
-          padding: const EdgeInsets.all(20),
+          padding: MediaQuery.of(context).viewInsets,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(width: 40),
               Text(
-                'Edit $labelText',
+                ' Edit $labelText',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -504,7 +395,7 @@ class ProfilePage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       _showSaveConfirmationDialog(
-                          context, labelText, updatedValue);
+                          context, labelText, updatedValue, Providers);
                     },
                     child: const Text('Save'),
                   ),
@@ -517,8 +408,322 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  void _showSaveConfirmationDialog(
-      BuildContext context, String labelText, String updatedValue) {
+  void _openEditFieldModalList(BuildContext context, String labelText,
+      String initialValue, userProvider providers) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          topRight: Radius.circular(15.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        String updatedValue = initialValue;
+
+        return Container(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 40),
+              Text(
+                ' Edit $labelText',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                initialValue: initialValue,
+                onChanged: (value) {
+                  updatedValue = value;
+                },
+                decoration: InputDecoration(
+                  labelText: labelText,
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the modal sheet
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _showSaveConfirmationDialog(
+                          context, labelText, updatedValue, providers);
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openEditFieldModalNum(BuildContext context, String labelText,
+      String initialValue, userProvider providers) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+      ),
+      builder: (BuildContext context) {
+        String updatedValue = initialValue;
+
+        return Container(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 40),
+              Text(
+                ' Edit $labelText',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                initialValue: initialValue,
+                onChanged: (value) {
+                  updatedValue = value;
+                },
+                decoration: InputDecoration(
+                  labelText: labelText,
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the modal sheet
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _showSaveConfirmationDialog(
+                          context, labelText, updatedValue, providers);
+                    },
+                    child: const Text('Save'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openEditFieldModalListGender(BuildContext context, String labelText,
+      String initialValue, userProvider providers) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+      ),
+      builder: (BuildContext context) {
+        String selectedGender = initialValue;
+
+        return Container(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 40),
+              Text(
+                '  Edit $labelText',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                title: const Text('Male'),
+                leading: Radio<String>(
+                  value: 'Male',
+                  groupValue: selectedGender,
+                  onChanged: (String? value) {
+                    selectedGender = value!;
+                    Navigator.pop(context); // Close the modal sheet
+                    _showSaveConfirmationDialog(
+                        context, labelText, selectedGender, providers);
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Female'),
+                leading: Radio<String>(
+                  value: 'Female',
+                  groupValue: selectedGender,
+                  onChanged: (String? value) {
+                    selectedGender = value!;
+                    Navigator.pop(context); // Close the modal sheet
+                    _showSaveConfirmationDialog(
+                        context, labelText, selectedGender, providers);
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the modal sheet
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openEditFieldModalListActivity(BuildContext context, String labelText,
+      String initialValue, userProvider providers) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+      ),
+      builder: (BuildContext context) {
+        String selectedActivityLevel = initialValue;
+        final List<String> _activityLevels = [
+          'Sedentary',
+          'Lightly active',
+          'Moderately active',
+          'Very active',
+          'Extra active'
+        ];
+
+        return Container(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 40),
+              Text(
+                '  Edit $labelText',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              for (String activity in _activityLevels)
+                ListTile(
+                  title: Text(activity),
+                  leading: Radio<String>(
+                    value: activity,
+                    groupValue: selectedActivityLevel,
+                    onChanged: (String? value) {
+                      selectedActivityLevel = value!;
+                      Navigator.pop(context); // Close the modal sheet
+                      _showSaveConfirmationDialog(
+                          context, labelText, selectedActivityLevel, providers);
+                    },
+                  ),
+                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the modal sheet
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _openImageSourceSelectionModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Select Image Source',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text('Camera'),
+                onTap: () {
+                  // Handle camera selection logic here
+                  Navigator.pop(context); // Close the modal sheet
+                  // _pickImageFromCamera();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text('Gallery'),
+                onTap: () {
+                  // Handle gallery selection logic here
+                  Navigator.pop(context); // Close the modal sheet
+                  // _pickImageFromGallery();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSaveConfirmationDialog(BuildContext context, String labelText,
+      String updatedValue, userProvider providers) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -533,11 +738,40 @@ class ProfilePage extends StatelessWidget {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                final userService _userService = userService();
+
+                if (labelText == 'Age') {
+                  int Inteage = int.parse(updatedValue);
+                  await _userService.updateAge(Inteage);
+                  providers.userR!.age = int.parse(updatedValue);
+                } else if (labelText == 'Activity level') {
+                  await _userService.updateActivity(updatedValue);
+                  providers.userR!.activityLevel = updatedValue;
+                } else if (labelText == 'Gender') {
+                  await _userService.updateGender(updatedValue);
+                  providers.userR!.gender = updatedValue;
+                } else if (labelText == 'Weight') {
+                  double doublweight = double.parse(updatedValue);
+                  await _userService.updateWeight(doublweight);
+                  providers.userR!.weight = double.parse(updatedValue);
+                } else if (labelText == 'Height') {
+                  double dobleheight = double.parse(updatedValue);
+                  await _userService.updateHeight(dobleheight);
+                  providers.userR!.height = double.parse(updatedValue);
+                } else if (labelText == 'User Name') {
+                  await _userService.updateUsername(updatedValue);
+                  providers.userR!.username = updatedValue;
+                } else {
+                  print('NOthing');
+                }
                 // Save changes logic here
                 print('Updated $labelText: $updatedValue');
+
                 Navigator.pop(context); // Close the dialog
-                Navigator.pop(context); // Close the modal sheet
+                // Navigator.pop(context); // Close the modal sheet
+
+                setState(() {});
               },
               child: const Text('Save'),
             ),

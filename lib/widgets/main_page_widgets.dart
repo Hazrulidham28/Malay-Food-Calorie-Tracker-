@@ -36,6 +36,10 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     super.initState();
   }
 
+  void callback() {
+    setState(() {});
+  }
+
   final appBar = AppBar(
     automaticallyImplyLeading: false,
     title: Container(
