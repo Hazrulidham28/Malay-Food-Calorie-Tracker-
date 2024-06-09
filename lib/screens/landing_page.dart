@@ -55,7 +55,10 @@ class LandingPage extends StatelessWidget {
                             20.0), // Set border radius here
                       ),
                     ),
-                    child: const Text('Get Started'),
+                    child: Text(
+                      'Get Started',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
@@ -73,7 +76,10 @@ class LandingPage extends StatelessWidget {
                   },
                   child: const Text(
                     'Has an account? Login',
-                    style: TextStyle(fontSize: 16.0, color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
