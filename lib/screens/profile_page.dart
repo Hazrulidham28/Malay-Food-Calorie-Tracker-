@@ -740,38 +740,92 @@ class _ProfilePageState extends State<ProfilePage> {
             ElevatedButton(
               onPressed: () async {
                 final userService _userService = userService();
+                String message;
 
-                if (labelText == 'Age') {
-                  int Inteage = int.parse(updatedValue);
-                  await _userService.updateAge(Inteage);
-                  providers.userR!.age = int.parse(updatedValue);
-                } else if (labelText == 'Activity level') {
-                  await _userService.updateActivity(updatedValue);
-                  providers.userR!.activityLevel = updatedValue;
-                } else if (labelText == 'Gender') {
-                  await _userService.updateGender(updatedValue);
-                  providers.userR!.gender = updatedValue;
-                } else if (labelText == 'Weight') {
-                  double doublweight = double.parse(updatedValue);
-                  await _userService.updateWeight(doublweight);
-                  providers.userR!.weight = double.parse(updatedValue);
-                } else if (labelText == 'Height') {
-                  double dobleheight = double.parse(updatedValue);
-                  await _userService.updateHeight(dobleheight);
-                  providers.userR!.height = double.parse(updatedValue);
-                } else if (labelText == 'User Name') {
-                  await _userService.updateUsername(updatedValue);
-                  providers.userR!.username = updatedValue;
-                } else {
-                  print('NOthing');
+                try {
+                  switch (labelText) {
+                    case 'Age':
+                      int age = int.parse(updatedValue);
+                      await _userService.updateAge(age);
+                      providers.userR!.age = age;
+                      message = 'Age updated successfully!';
+                      break;
+                    case 'Activity level':
+                      await _userService.updateActivity(updatedValue);
+                      providers.userR!.activityLevel = updatedValue;
+                      message = 'Activity level updated successfully!';
+                      break;
+                    case 'Gender':
+                      await _userService.updateGender(updatedValue);
+                      providers.userR!.gender = updatedValue;
+                      message = 'Gender updated successfully!';
+                      break;
+                    case 'Weight':
+                      double weight = double.parse(updatedValue);
+                      await _userService.updateWeight(weight);
+                      providers.userR!.weight = weight;
+                      message = 'Weight updated successfully!';
+                      break;
+                    case 'Height':
+                      double height = double.parse(updatedValue);
+                      await _userService.updateHeight(height);
+                      providers.userR!.height = height;
+                      message = 'Height updated successfully!';
+                      break;
+                    case 'User Name':
+                      await _userService.updateUsername(updatedValue);
+                      providers.userR!.username = updatedValue;
+                      message = 'Username updated successfully!';
+                      break;
+                    default:
+                      message = 'Unknown field: $labelText';
+                  }
+
+                  // Save changes logic here
+                  print('Updated $labelText: $updatedValue');
+                  Navigator.pop(context); // Close the modal sheet
+
+                  // Show success message
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Success'),
+                        content: Text(message),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } catch (e) {
+                  print('Failed to update $labelText: $e');
+
+                  // Show error message
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Error'),
+                        content: Text(
+                            'Failed to update $labelText. Please try again.'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
-                // Save changes logic here
-                print('Updated $labelText: $updatedValue');
-
-                Navigator.pop(context); // Close the dialog
-                // Navigator.pop(context); // Close the modal sheet
-
-                setState(() {});
               },
               child: const Text('Save'),
             ),

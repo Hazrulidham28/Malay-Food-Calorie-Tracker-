@@ -2,96 +2,52 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class userService {
+  // Singleton pattern
+  static final userService _instance = userService._internal();
+  factory userService() => _instance;
+  userService._internal();
+
   final User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> updateUsername(String uname) async {
+  Future<void> _updateUserField(String field, dynamic value) async {
     try {
       if (user != null) {
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user!.uid)
-            .update({'username': uname});
+            .update({field: value});
       }
     } catch (error) {
-      print("Error changing username: $error");
+      print("Error updating $field: $error");
+      // Consider using a logging package or rethrowing the error
     }
+  }
+
+  Future<void> updateUsername(String username) async {
+    await _updateUserField('username', username);
   }
 
   Future<void> updateActivity(String activity) async {
-    try {
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .update({'activityLevel': activity});
-      }
-    } catch (error) {
-      print("Error UpdateActivity: $error");
-    }
+    await _updateUserField('activityLevel', activity);
   }
 
   Future<void> updateAge(int age) async {
-    try {
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .update({'age': age});
-      }
-    } catch (error) {
-      print("Error UpdateAge: $error");
-    }
+    await _updateUserField('age', age);
   }
 
   Future<void> updateWeight(double weight) async {
-    try {
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .update({'weight': weight});
-      }
-    } catch (error) {
-      print("Error Updateweight: $error");
-    }
+    await _updateUserField('weight', weight);
   }
 
   Future<void> updateGender(String gender) async {
-    try {
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .update({'gender': gender});
-      }
-    } catch (error) {
-      print("Error Updategender: $error");
-    }
+    await _updateUserField('gender', gender);
   }
 
   Future<void> updateHeight(double height) async {
-    try {
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .update({'height': height});
-      }
-    } catch (error) {
-      print("Error Updategender: $error");
-    }
+    await _updateUserField('height', height);
   }
 
-  Future<void> updatePPhoto(String photolink) async {
-    try {
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .update({'userProfile': photolink});
-      }
-    } catch (error) {
-      print("Error UpdateProfilPhoto: $error");
-    }
+  Future<void> updateProfilePhoto(String photoLink) async {
+    await _updateUserField('userProfile', photoLink);
   }
 }

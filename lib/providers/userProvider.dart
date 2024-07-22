@@ -134,8 +134,9 @@ class userProvider extends ChangeNotifier {
     } else {
       BMR = (10 * user!.weight) + (6.25 * user!.height) - (5 * user!.age) - 161;
     }
-    double activityFactor = 0;double dailyIntake = 0;
-    
+    double activityFactor = 0;
+    double dailyIntake = 0;
+
     switch (userR!.activityLevel.toLowerCase()) {
       case 'sedentary':
         activityFactor = 1.2;
@@ -157,6 +158,31 @@ class userProvider extends ChangeNotifier {
     }
 
     dailyIntake = BMR * activityFactor;
+
+    //set the daily calorie intake based on the user's bmi level
+    // add 400 if underweight and minus 400 if overweight
+
+    String userBMI = getBmi();
+
+    // if (userBMI == "Underweight") {
+    //   dailyIntake = dailyIntake + 400;
+    // } else if (userBMI == "Overweight") {
+    //   dailyIntake = dailyIntake - 400;
+    // } else if (userBMI == "Obesity") {
+    //   dailyIntake = dailyIntake - 400;
+    // } else {}
+    switch (userBMI) {
+      case "Underweight":
+        dailyIntake += 400;
+        break;
+      case "Overweight":
+      case "Obesity":
+        dailyIntake -= 400;
+        break;
+      default:
+        // Handle unexpected userBMI values if needed
+        break;
+    }
     return dailyIntake;
   }
 
