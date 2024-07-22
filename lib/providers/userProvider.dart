@@ -129,16 +129,13 @@ class userProvider extends ChangeNotifier {
 
   double getDailyIntake() {
     double BMR = 0;
-
     if (userR!.gender.toLowerCase() == 'male') {
       BMR = (10 * user!.weight) + (6.25 * user!.height) - (5 * user!.age) + 5;
     } else {
       BMR = (10 * user!.weight) + (6.25 * user!.height) - (5 * user!.age) - 161;
     }
-
-    double activityFactor = 0;
-    double dailyIntake = 0;
-
+    double activityFactor = 0;double dailyIntake = 0;
+    
     switch (userR!.activityLevel.toLowerCase()) {
       case 'sedentary':
         activityFactor = 1.2;

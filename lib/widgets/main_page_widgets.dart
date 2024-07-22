@@ -300,10 +300,40 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
     );
   }
 
+  String setLabelConfidence(int caloriIndex, double confidence) {
+    double conf = confidence;
+
+    if (caloriIndex == 1) {
+      conf = 0;
+    } else if (caloriIndex == 2) {
+      conf = 0;
+    } else if (caloriIndex == 5) {
+      conf = 0;
+    } else {}
+
+    if (confidence < 0.4) {
+      conf = 0;
+    } else {}
+
+    return conf.toStringAsFixed(2);
+  }
+
+  String checkedLabel(String label, double confidence) {
+    String newLabel = label;
+
+    if (confidence < 0.4) {
+      newLabel = "Not Learn yet ";
+    }
+    return newLabel;
+  }
+
   void _showCapturedImageDialog(BuildContext context, Tflite tflite) {
     String label = tflite.predLabel ?? "Label not found";
     double confidences = tflite.confidence as double;
-    String formattedConfidence = confidences.toStringAsFixed(2);
+    String formattedConfidence =
+        setLabelConfidence(tflite.caloriesIndex as int, confidences);
+    String checkedLabels =
+        checkedLabel(label.toString(), confidences as double);
 
     showDialog(
       context: context,
@@ -328,7 +358,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                     decoration: BoxDecoration(shape: BoxShape.circle),
                   ),
                   SizedBox(height: 20),
-                  Text("Label: $label"),
+                  Text("Label: $checkedLabels"),
                   SizedBox(height: 20),
                   Text("Confidence: $formattedConfidence"),
                   SizedBox(height: 20),

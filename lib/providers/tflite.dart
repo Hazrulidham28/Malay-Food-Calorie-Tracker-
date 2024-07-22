@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:image/image.dart' as imglib;
@@ -24,10 +23,12 @@ class Tflite extends ChangeNotifier {
   }
 
   void loadAsset() async {
-    String loadedString = await rootBundle.loadString('assets/label3class.txt');
+    String loadedString = await rootBundle.loadString('assets/label6model.txt');
     allLabel = loadedString.split('\n');
     notifyListeners();
   }
+
+  // int calories = 0;
 
   // void calculateCalorie() {
   //   if (predLabel == 'karipap') {
@@ -44,7 +45,7 @@ class Tflite extends ChangeNotifier {
   Future<Interpreter> get _interpreter async {
     if (interpreterInstance == null) {
       interpreterInstance = await Interpreter.fromAsset(
-        'assets/3classmodel_Trained1.tflite',
+        'assets/resnet50_model6.tflite',
       );
       notifyListeners();
     }
@@ -71,7 +72,6 @@ class Tflite extends ChangeNotifier {
     result = await _runInference(imageMatrix);
     predLabel = getLabel(result.cast<num>()).toString();
     confidence = getConfidence(result.cast<num>());
-
     isLoading = false;
     // calculateCalorie();
     notifyListeners();
@@ -104,6 +104,20 @@ class Tflite extends ChangeNotifier {
     });
 
     return allLabel[bestInd];
+  }
+
+  void setLabelConfidence() {
+    // Check if confidence is null and assign a default value if necessary
+    double thisConfidence = confidence ?? 0;
+
+    if (caloriesIndex == 1 && caloriesIndex == 2 && caloriesIndex == 5) {
+      confidence = 0;
+    } else {
+      if (thisConfidence < 0.70) {
+        predLabel = 'Not Learn yet';
+        confidence = 0;
+      } else {}
+    }
   }
 
   double getConfidence(List<num>? diagnoseScores) {

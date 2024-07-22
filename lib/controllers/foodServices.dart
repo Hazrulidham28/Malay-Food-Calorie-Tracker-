@@ -106,17 +106,24 @@ class FoodService {
     return File(result.path);
   }
 
+// 0 Karipap
+// 1 Cannot classify !!!
+// 2 Cannot classify !!!
+// 3 Nasi Lemak
+// 4 Roti Canai
+// 5 Cannot classify !!!
+
   double getCalories(int indexOfcalories, int quantity) {
     double calorieofFood = 0;
     double total = 0;
     if (indexOfcalories == 0) {
       calorieofFood = 230;
-    } else if (indexOfcalories == 1) {
+    } else if (indexOfcalories == 3) {
       calorieofFood = 389;
-    } else if (indexOfcalories == 2) {
+    } else if (indexOfcalories == 4) {
       calorieofFood = 300;
     } else {
-      calorieofFood = 1;
+      calorieofFood = 0;
     }
     total = calorieofFood * quantity;
     return total;
