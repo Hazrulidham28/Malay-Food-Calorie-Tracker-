@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:malay_food_cal_tracker/controllers/userServices.dart';
+import 'package:malay_food_cal_tracker/providers/tflite.dart';
 import 'package:malay_food_cal_tracker/widgets/main_page_widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:iconsax/iconsax.dart';
@@ -34,7 +35,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final userProviders = Provider.of<userProvider>(context, listen: false);
+    final userProviders = Provider.of<userProvider>(context, listen: true);
+    final tfLiteProvider = Provider.of<Tflite>(context, listen: true);
     final user = userProviders.userR;
     final String imageurl =
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
@@ -49,6 +51,10 @@ class _ProfilePageState extends State<ProfilePage> {
       } catch (e) {
         print('Error during logout: $e');
       }
+    }
+
+    void triggerRefresh() {
+      tfLiteProvider.refreshPages();
     }
 
     return SafeArea(
@@ -231,24 +237,37 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 20),
               Container(
                 width: 380,
-                child: _buildInputField(context, 'User Name', user.username,
-                    Icon(Icons.person), userProviders),
+                child: _buildInputField(
+                  context,
+                  'User Name',
+                  user.username,
+                  Icon(Icons.person),
+                  userProviders,
+                  tfLiteProvider,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                width: 380,
+                child: _buildInputField(
+                  context,
+                  'Activity level',
+                  user.activityLevel,
+                  Icon(Icons.health_and_safety),
+                  userProviders,
+                  tfLiteProvider,
+                ),
               ),
               const SizedBox(height: 20),
               Container(
                 width: 380,
                 child: _buildInputField(
                     context,
-                    'Activity level',
-                    user.activityLevel,
-                    Icon(Icons.health_and_safety),
-                    userProviders),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: 380,
-                child: _buildInputField(context, 'Age', user.age.toString(),
-                    Icon(Icons.format_list_numbered), userProviders),
+                    'Age',
+                    user.age.toString(),
+                    Icon(Icons.format_list_numbered),
+                    userProviders,
+                    tfLiteProvider),
               ),
               const SizedBox(height: 20),
               Container(
@@ -258,19 +277,25 @@ class _ProfilePageState extends State<ProfilePage> {
                     'Weight',
                     user.weight.toString(),
                     Icon(Icons.monitor_weight),
-                    userProviders),
+                    userProviders,
+                    tfLiteProvider),
               ),
               const SizedBox(height: 20),
               Container(
                 width: 380,
                 child: _buildInputField(context, 'Gender', user.gender,
-                    Icon(Iconsax.profile_2user), userProviders),
+                    Icon(Iconsax.profile_2user), userProviders, tfLiteProvider),
               ),
               const SizedBox(height: 20),
               Container(
                 width: 380,
-                child: _buildInputField(context, 'Height',
-                    user.height.toString(), Icon(Icons.height), userProviders),
+                child: _buildInputField(
+                    context,
+                    'Height',
+                    user.height.toString(),
+                    Icon(Icons.height),
+                    userProviders,
+                    tfLiteProvider),
               ),
               const SizedBox(height: 20),
 
@@ -296,8 +321,13 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildInputField(BuildContext context, String labelText,
-      String initialValue, Icon icon, userProvider providers) {
+  Widget _buildInputField(
+      BuildContext context,
+      String labelText,
+      String initialValue,
+      Icon icon,
+      userProvider providers,
+      Tflite tfliteprovider) {
     return InputDecorator(
       decoration: InputDecoration(
         labelText: labelText,
@@ -312,15 +342,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 labelText == 'Weight' ||
                 labelText == 'Height') {
               _openEditFieldModalNum(
-                  context, labelText, initialValue, providers);
+                  context, labelText, initialValue, providers, tfliteprovider);
             } else if (labelText == 'Activity level') {
               _openEditFieldModalListActivity(
-                  context, labelText, initialValue, providers);
+                  context, labelText, initialValue, providers, tfliteprovider);
             } else if (labelText == 'Gender') {
               _openEditFieldModalListGender(
-                  context, labelText, initialValue, providers);
+                  context, labelText, initialValue, providers, tfliteprovider);
             } else {
-              _openEditFieldModal(context, labelText, initialValue, providers);
+              _openEditFieldModal(
+                  context, labelText, initialValue, providers, tfliteprovider);
             }
           },
         ),
@@ -344,7 +375,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _openEditFieldModal(BuildContext context, String labelText,
-      String initialValue, userProvider Providers) {
+      String initialValue, userProvider Providers, Tflite tfliteprovide) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -394,8 +425,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      _showSaveConfirmationDialog(
-                          context, labelText, updatedValue, Providers);
+                      _showSaveConfirmationDialog(context, labelText,
+                          updatedValue, Providers, tfliteprovide);
                     },
                     child: const Text('Save'),
                   ),
@@ -409,7 +440,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _openEditFieldModalList(BuildContext context, String labelText,
-      String initialValue, userProvider providers) {
+      String initialValue, userProvider providers, Tflite tfliteprovide) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -460,8 +491,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      _showSaveConfirmationDialog(
-                          context, labelText, updatedValue, providers);
+                      _showSaveConfirmationDialog(context, labelText,
+                          updatedValue, providers, tfliteprovide);
                     },
                     child: const Text('Save'),
                   ),
@@ -475,7 +506,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _openEditFieldModalNum(BuildContext context, String labelText,
-      String initialValue, userProvider providers) {
+      String initialValue, userProvider providers, Tflite tfliteprovide) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -525,8 +556,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      _showSaveConfirmationDialog(
-                          context, labelText, updatedValue, providers);
+                      _showSaveConfirmationDialog(context, labelText,
+                          updatedValue, providers, tfliteprovide);
                     },
                     child: const Text('Save'),
                   ),
@@ -540,7 +571,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _openEditFieldModalListGender(BuildContext context, String labelText,
-      String initialValue, userProvider providers) {
+      String initialValue, userProvider providers, Tflite tfliteprovide) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -574,8 +605,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   onChanged: (String? value) {
                     selectedGender = value!;
                     Navigator.pop(context); // Close the modal sheet
-                    _showSaveConfirmationDialog(
-                        context, labelText, selectedGender, providers);
+                    _showSaveConfirmationDialog(context, labelText,
+                        selectedGender, providers, tfliteprovide);
                   },
                 ),
               ),
@@ -587,8 +618,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   onChanged: (String? value) {
                     selectedGender = value!;
                     Navigator.pop(context); // Close the modal sheet
-                    _showSaveConfirmationDialog(
-                        context, labelText, selectedGender, providers);
+                    _showSaveConfirmationDialog(context, labelText,
+                        selectedGender, providers, tfliteprovide);
                   },
                 ),
               ),
@@ -611,7 +642,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _openEditFieldModalListActivity(BuildContext context, String labelText,
-      String initialValue, userProvider providers) {
+      String initialValue, userProvider providers, Tflite tfliteprovide) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -653,8 +684,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     onChanged: (String? value) {
                       selectedActivityLevel = value!;
                       Navigator.pop(context); // Close the modal sheet
-                      _showSaveConfirmationDialog(
-                          context, labelText, selectedActivityLevel, providers);
+                      _showSaveConfirmationDialog(context, labelText,
+                          selectedActivityLevel, providers, tfliteprovide);
                     },
                   ),
                 ),
@@ -722,8 +753,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+//seperate between number and string to update value
   void _showSaveConfirmationDialog(BuildContext context, String labelText,
-      String updatedValue, userProvider providers) {
+      String updatedValue, userProvider providers, Tflite tfliteprovider) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -780,7 +812,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     default:
                       message = 'Unknown field: $labelText';
                   }
-
+                  providers.refreshpage();
+                  tfliteprovider.refreshPages();
                   // Save changes logic here
                   print('Updated $labelText: $updatedValue');
                   Navigator.pop(context); // Close the modal sheet

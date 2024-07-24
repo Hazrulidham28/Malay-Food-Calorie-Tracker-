@@ -76,6 +76,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
   Widget build(BuildContext context) {
     return Consumer<Tflite>(
       builder: (context, tflite, child) {
+        _fetchTodaysMeals();
         return SafeArea(
           child: Scaffold(
             //appBar: appBar,

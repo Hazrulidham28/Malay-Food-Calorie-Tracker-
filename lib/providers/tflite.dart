@@ -149,4 +149,8 @@ class Tflite extends ChangeNotifier {
     await getImage(source);
     notifyListeners();
   }
+
+  void refreshPages() {
+    notifyListeners();
+  }
 }

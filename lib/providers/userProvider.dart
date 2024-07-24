@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:malay_food_cal_tracker/widgets/main_page_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 
@@ -203,5 +204,9 @@ class userProvider extends ChangeNotifier {
     }
 
     return Bmilevel;
+  }
+
+  void refreshpage() {
+    notifyListeners();
   }
 }
