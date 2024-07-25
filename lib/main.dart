@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:malay_food_cal_tracker/providers/tflite.dart';
 import 'package:malay_food_cal_tracker/providers/userProvider.dart';
 import 'package:malay_food_cal_tracker/screens/firstRegister_page.dart';
+import 'package:malay_food_cal_tracker/screens/landing_page.dart';
 import 'package:malay_food_cal_tracker/screens/login_page.dart';
 import 'package:malay_food_cal_tracker/screens/profile_page.dart';
 import 'package:malay_food_cal_tracker/screens/splash_page.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           '/register': (context) => FirstRegistrationPage(),
           '/home': (context) => HomePage(),
           '/profile': (context) => ProfilePage(),
+          '/landing': (context) => LandingPage(),
         },
       ),
     );

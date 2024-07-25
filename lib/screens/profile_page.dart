@@ -42,12 +42,20 @@ class _ProfilePageState extends State<ProfilePage> {
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
     final userService _userService = userService();
 
+    bool _isLoading = false;
+
 //method to loggout the user and navigate to login page
-    void _userLogout() {
+    void _userLogout() async {
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Simulate a delay for 3 seconds
+      await Future.delayed(Duration(seconds: 2));
       try {
         userProviders.logoutUser();
         //navigate to login page after user logout
-        Navigator.pushReplacementNamed(context, '/login');
+        Navigator.pushReplacementNamed(context, '/landing');
       } catch (e) {
         print('Error during logout: $e');
       }
@@ -261,10 +269,11 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 20),
               Container(
                 width: 380,
-                child: _buildInputField(
+                //set to int
+                child: _buildInputFieldNumInt(
                     context,
                     'Age',
-                    user.age.toString(),
+                    user.age,
                     Icon(Icons.format_list_numbered),
                     userProviders,
                     tfLiteProvider),
@@ -303,14 +312,16 @@ class _ProfilePageState extends State<ProfilePage> {
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: _userLogout,
+                  onPressed: _isLoading ? null : _userLogout,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text('Log Out'),
+                  child: _isLoading
+                      ? CircularProgressIndicator()
+                      : const Text('Log Out'),
                 ),
               ),
               const SizedBox(height: 20),
@@ -357,6 +368,33 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       child: Text(initialValue),
+    );
+  }
+
+//setel
+  Widget _buildInputFieldNumInt(
+      BuildContext context,
+      String labelText,
+      int initialValue,
+      Icon icon,
+      userProvider providers,
+      Tflite tfliteprovider) {
+    return InputDecorator(
+      decoration: InputDecoration(
+        labelText: labelText,
+        prefixIcon: icon,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.edit),
+          onPressed: () {
+            _openEditFieldModalNumInt(
+                context, labelText, initialValue, providers, tfliteprovider);
+          },
+        ),
+      ),
+      child: Text(initialValue.toString()),
     );
   }
 
@@ -565,6 +603,91 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _openEditFieldModalNumInt(
+    BuildContext context,
+    String labelText,
+    int initialValue,
+    userProvider providers,
+    Tflite tfliteProvide,
+  ) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          topRight: Radius.circular(15.0),
+        ),
+      ),
+      builder: (BuildContext context) {
+        TextEditingController _controller =
+            TextEditingController(text: initialValue.toString());
+        int updatedValue = initialValue;
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 40),
+                  Text(
+                    'Edit $labelText',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _controller,
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      setState(() {
+                        updatedValue = int.tryParse(value) ?? initialValue;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: labelText,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context); // Close the modal sheet
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _showSaveConfirmationDialog(
+                            context,
+                            labelText,
+                            updatedValue.toString(),
+                            providers,
+                            tfliteProvide,
+                          );
+                        },
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
@@ -808,6 +931,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       await _userService.updateUsername(updatedValue);
                       providers.userR!.username = updatedValue;
                       message = 'Username updated successfully!';
+                      Navigator.pop(context);
                       break;
                     default:
                       message = 'Unknown field: $labelText';
