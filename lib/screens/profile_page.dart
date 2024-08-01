@@ -50,14 +50,38 @@ class _ProfilePageState extends State<ProfilePage> {
         _isLoading = true;
       });
 
-      // Simulate a delay for 3 seconds
-      await Future.delayed(Duration(seconds: 2));
+      // Simulate a delay for 1 seconds
+      await Future.delayed(Duration(seconds: 1));
       try {
-        userProviders.logoutUser();
-        //navigate to login page after user logout
-        Navigator.pushReplacementNamed(context, '/landing');
+        // Show success dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Logout Successful'),
+              content: Text('You have been logged out successfully.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                    Navigator.pushReplacementNamed(
+                        context, '/landing'); // Navigate to login page
+                    // Perform user logout
+                    Future.delayed(Duration(seconds: 1));
+                    userProviders.logoutUser();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       } catch (e) {
         print('Error during logout: $e');
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
 

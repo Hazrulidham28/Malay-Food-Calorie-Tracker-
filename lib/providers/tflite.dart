@@ -45,7 +45,7 @@ class Tflite extends ChangeNotifier {
   Future<Interpreter> get _interpreter async {
     if (interpreterInstance == null) {
       interpreterInstance = await Interpreter.fromAsset(
-        'assets/resnet50_model6.tflite',
+        'assets/resnet50_model7.tflite',
       );
       notifyListeners();
     }

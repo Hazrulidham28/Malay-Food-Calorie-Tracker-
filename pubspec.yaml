@@ -36,10 +36,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/resnet50_model6.tflite
     - assets/label3class.txt
-    - assets/3classmodel_Trained1.tflite
     - assets/label6model.txt
+    - assets/resnet50_model7.tflite
 
 flutter_icons:
   android: true
