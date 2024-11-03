@@ -47,7 +47,7 @@ Here are some screenshots of the Malay Food Calorie Tracker app:
 ## Getting Started
 1. Clone the repository:
     ```bash
-    git clone https://github.com/username/malay-food-calorie-tracker.git
+    git clone https://github.com/Hazrulidham28/Malay-Food-Calorie-Tracker-.git
     ```
 2. Navigate to the project directory:
     ```bash
