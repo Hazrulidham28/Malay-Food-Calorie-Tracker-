@@ -19,11 +19,16 @@ A ResNet-50 model was trained for food image classification, adapted to recogniz
 ## Screenshots
 Here are some screenshots of the Malay Food Calorie Tracker app:
 
-![Registeration Page](assets/screenshot/Register1.png)
+<!-- ![Registeration Page](assets/screenshot/Register1.png)
 ![Login Page](assets/screenshot/LoginPage.png)
 ![Home Page](assets/screenshot/HomePage.png)
 ![Food Detection](assets/screenshot/Foodclassify.png)
-![Profile Page](assets/screenshot/ProfilePage.png)
+![Profile Page](assets/screenshot/ProfilePage.png) -->
+<img src="assets/screenshot/Register1.png" alt="Registration Page" width="300"/>
+<img src="assets/screenshot/LoginPage.png" alt="Login Page" width="300"/>
+<img src="assets/screenshot/HomePage.png" alt="Home Page" width="300"/>
+<img src="assets/screenshot/Foodclassify.png" alt="Food Detection" width="300"/>
+<img src="assets/screenshot/ProfilePage.png" alt="Profile Page" width="300"/>
 
 
 ## Getting Started
