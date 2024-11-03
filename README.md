@@ -16,6 +16,16 @@ This project is a Malay Food Calorie Tracker application developed as a final ye
 ## Machine Learning Model
 A ResNet-50 model was trained for food image classification, adapted to recognize common Malay food items. The model was implemented and integrated with the app to provide real-time food recognition and calorie estimates.
 
+## Screenshots
+Here are some screenshots of the Malay Food Calorie Tracker app:
+
+![Registeration Page](assets/screenshot/Register1.png)
+![Login Page](assets/screenshot/LoginPage.png)
+![Home Page](assets/screenshot/HomePage.png)
+![Food Detection](assets/screenshot/Foodclassify.png)
+![Profile Page](assets/screenshot/ProfilePage.png)
+
+
 ## Getting Started
 1. Clone the repository:
     ```bash
