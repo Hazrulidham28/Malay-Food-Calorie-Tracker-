@@ -24,10 +24,23 @@ Here are some screenshots of the Malay Food Calorie Tracker app:
 ![Home Page](assets/screenshot/HomePage.png)
 ![Food Detection](assets/screenshot/Foodclassify.png)
 ![Profile Page](assets/screenshot/ProfilePage.png) -->
+
+### Landing Page
+<img src="assets/screenshot/Landing page.png" alt="Registration Page" width="300"/>
+
+### Registeration Page
 <img src="assets/screenshot/Register1.png" alt="Registration Page" width="300"/>
+
+### Login Page
 <img src="assets/screenshot/LoginPage.png" alt="Login Page" width="300"/>
+
+### Home Page
 <img src="assets/screenshot/HomePage.png" alt="Home Page" width="300"/>
+
+### Food Classification Page
 <img src="assets/screenshot/Foodclassify.png" alt="Food Detection" width="300"/>
+
+### Profile Page
 <img src="assets/screenshot/ProfilePage.png" alt="Profile Page" width="300"/>
 
 
