@@ -21,6 +21,7 @@ class Tflite extends ChangeNotifier {
   Tflite() {
     loadAsset();
   }
+  //this is load assest
 
   void loadAsset() async {
     String loadedString = await rootBundle.loadString('assets/label6model.txt');

@@ -132,7 +132,7 @@ class _MainPageWidgetsState extends State<MainPageWidgets> {
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
-                          15), // Adjust the radius as needed
+                          15), // Adjust the radius as needed new comment
                     ),
                     elevation: 9,
                     margin: EdgeInsets.all(20),
