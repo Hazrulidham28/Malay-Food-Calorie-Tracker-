@@ -27,9 +27,6 @@ class _ProfileAppState extends State<ProfileApp> {
 class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
-  // Function? callback;
-
-  // ProfilePage(this.callback);
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -40,7 +37,6 @@ class _ProfilePageState extends State<ProfilePage> {
     final user = userProviders.userR;
     final String imageurl =
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-    final userService _userService = userService();
 
     bool _isLoading = false;
 

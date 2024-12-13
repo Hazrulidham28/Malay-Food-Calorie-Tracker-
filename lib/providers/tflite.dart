@@ -29,20 +29,6 @@ class Tflite extends ChangeNotifier {
     notifyListeners();
   }
 
-  // int calories = 0;
-
-  // void calculateCalorie() {
-  //   if (predLabel == 'karipap') {
-  //     calories = 130;
-  //   } else if (predLabel == 'roti_canai') {
-  //     calories = 300;
-  //   } else if (predLabel == 'nasi_lemak') {
-  //     calories = 389;
-  //   } else {
-  //     calories = 1; // Default calorie value if label doesn't match
-  //   }
-  // }
-
   Future<Interpreter> get _interpreter async {
     if (interpreterInstance == null) {
       interpreterInstance = await Interpreter.fromAsset(
